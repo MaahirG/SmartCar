@@ -12,17 +12,14 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){ //pass by reference to make changes
+void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){
     rcProjPkg::motor_controls_msg mapped_obj_msg;
-    std::cout << "Received the data: " << data.x << " " << data.y << std::endl;
-    int lmao = map(data.x, 0, 1023, 0, 100);
+    std::cout << "Received data: " << "X: " << data.x << " Y: " << data.y << std::endl;
     mapped_obj_msg.mappedX = map(data.x, 0, 1023, 0, 100);
     mapped_obj_msg.mappedY = map(data.y, 0, 1023, 0, 100);
     
-    std::cout<< lmao << std::endl;
-    //std::cout << "Mapped data: " << mapped_obj_msg.mappedX << " " << mapped_obj_msg.mappedY << std::endl;
-    std::cout<<"CALLBACK"<<std::endl;
-    
+    std::cout << "Mapped data: " << "X: " << mapped_obj_msg.mappedX << " Y: " << mapped_obj_msg.mappedY << std::endl;
+        
     pub_to_pi.publish(mapped_obj_msg);
 }
 
@@ -31,7 +28,7 @@ int main(int argc, char ** argv){
     ros::init(argc, argv, "data_processor"); // initialize the node
     ros::NodeHandle node_handle;
     SensorProcessing data = SensorProcessing(node_handle);
-    std::cout<<"HI"<<std::endl;
+    std::cout<<"Processing Node Initiated"<<std::endl;
     ros::spin();
 
 }
