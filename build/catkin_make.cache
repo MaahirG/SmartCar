@@ -1,0 +1,2 @@
+rcProjPkg
+-DCATKIN_DEVEL_PREFIX=/home/maahir/rcProject_ws/devel -DCMAKE_INSTALL_PREFIX=/home/maahir/rcProject_ws/install -G Unix Makefiles
