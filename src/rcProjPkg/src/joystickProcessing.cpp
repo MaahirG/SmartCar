@@ -15,11 +15,15 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){
     rcProjPkg::motor_controls_msg mapped_obj_msg;
     std::cout << "Received data: " << "X: " << data.x << " Y: " << data.y << std::endl;
-    mapped_obj_msg.mappedX = map(data.x, 0, 1023, 0, 100);
-    mapped_obj_msg.mappedY = map(data.y, 0, 1023, 0, 100);
+
+    int mapX = map(data.x, 0, 1023, 0, 100);
+    int mapY = map(data.y, 0, 1023, 0, 100);
+
+    mapped_obj_msg.mappedX = mapX;
+    mapped_obj_msg.mappedY = mapY;
     
-    std::cout << "Mapped data: " << "X: " << mapped_obj_msg.mappedX << " Y: " << mapped_obj_msg.mappedY << std::endl;
-        
+    std::cout << "Mapped data: " << "X: " << mapX << " Y: " << mapY << std::endl;
+
     pub_to_pi.publish(mapped_obj_msg);
 }
 
