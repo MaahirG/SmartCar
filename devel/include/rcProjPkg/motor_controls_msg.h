@@ -66,6 +66,21 @@ ros::message_operations::Printer< ::rcProjPkg::motor_controls_msg_<ContainerAllo
 return s;
 }
 
+
+template<typename ContainerAllocator1, typename ContainerAllocator2>
+bool operator==(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator1> & lhs, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator2> & rhs)
+{
+  return lhs.mappedX == rhs.mappedX &&
+    lhs.mappedY == rhs.mappedY;
+}
+
+template<typename ContainerAllocator1, typename ContainerAllocator2>
+bool operator!=(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator1> & lhs, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator2> & rhs)
+{
+  return !(lhs == rhs);
+}
+
+
 } // namespace rcProjPkg
 
 namespace ros
@@ -73,12 +88,6 @@ namespace ros
 namespace message_traits
 {
 
-
-
-// BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
-// {'rcProjPkg': ['/home/maahir/rcProject_ws/src/rcProjPkg/msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
-
-// !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 
 
 
@@ -143,9 +152,9 @@ struct Definition< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "uint8 mappedX\n\
-uint8 mappedY\n\
-";
+    return "uint8 mappedX\n"
+"uint8 mappedY\n"
+;
   }
 
   static const char* value(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>&) { return value(); }
