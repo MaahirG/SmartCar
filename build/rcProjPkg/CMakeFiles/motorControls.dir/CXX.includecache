@@ -6,22 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/ubuntu/SmartRCCar/devel/include/rcProjPkg/data_msg.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
 /home/ubuntu/SmartRCCar/devel/include/rcProjPkg/motor_controls_msg.h
 string
 -
@@ -38,23 +22,23 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 
-/home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/joystickProcessing.h
+/home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/motorControls.h
 cstdlib
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/cstdlib
 ros/ros.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/ros/ros.h
 std_msgs/String.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/std_msgs/String.h
-rcProjPkg/data_msg.h
-/home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/data_msg.h
 rcProjPkg/motor_controls_msg.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/motor_controls_msg.h
 wiringPi.h
 -
 
-/home/ubuntu/SmartRCCar/src/rcProjPkg/src/joystickProcessing.cpp
-rcProjPkg/joystickProcessing.h
-/home/ubuntu/SmartRCCar/src/rcProjPkg/src/rcProjPkg/joystickProcessing.h
+/home/ubuntu/SmartRCCar/src/rcProjPkg/src/motorControls.cpp
+wiringPi.h
+-
+rcProjPkg/motorControls.h
+/home/ubuntu/SmartRCCar/src/rcProjPkg/src/rcProjPkg/motorControls.h
 
 /opt/ros/melodic/include/ros/advertise_options.h
 ros/forwards.h

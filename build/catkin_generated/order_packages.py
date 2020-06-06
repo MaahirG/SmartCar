@@ -2,4 +2,4 @@
 source_root_dir = '/home/ubuntu/SmartRCCar/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/home/ubuntu/rcCarProj_ws/devel;/opt/ros/melodic'.split(';') if '/home/ubuntu/rcCarProj_ws/devel;/opt/ros/melodic' != '' else []
+underlay_workspaces = '/home/ubuntu/SmartRCCar/devel;/opt/ros/melodic'.split(';') if '/home/ubuntu/SmartRCCar/devel;/opt/ros/melodic' != '' else []

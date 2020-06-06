@@ -410,6 +410,7 @@ clean: gtest/googlemock/gtest/CMakeFiles/gtest.dir/clean
 # Convenience name for "all" pass in the directory.
 rcProjPkg/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all
 rcProjPkg/all: rcProjPkg/CMakeFiles/joystickProcessing.dir/all
+rcProjPkg/all: rcProjPkg/CMakeFiles/motorControls.dir/all
 
 .PHONY : rcProjPkg/all
 
@@ -436,6 +437,7 @@ rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_gencpp.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/joystickProcessing.dir/clean
+rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/clean
@@ -443,7 +445,7 @@ rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/clean
 rcProjPkg/clean: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/clean
-rcProjPkg/clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
+rcProjPkg/clean: rcProjPkg/CMakeFiles/motorControls.dir/clean
 
 .PHONY : rcProjPkg/clean
 
@@ -557,7 +559,7 @@ rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/all: rcProjPkg/CMakeFi
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_data_msg.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=19,20 "Built target rcProjPkg_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=21,22 "Built target rcProjPkg_generate_messages_lisp"
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -908,9 +910,9 @@ clean: rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/clean
 # All Build rule for target.
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/all
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num= "Built target rcProjPkg_generate_messages"
@@ -1016,7 +1018,7 @@ rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all: rcProjPkg/CMakeFil
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_data_msg.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=14,15 "Built target rcProjPkg_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=16,17 "Built target rcProjPkg_generate_messages_cpp"
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1157,11 +1159,11 @@ rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/roscpp_gen
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/all
 rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/all
-rcProjPkg/CMakeFiles/joystickProcessing.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/joystickProcessing.dir/build.make rcProjPkg/CMakeFiles/joystickProcessing.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/joystickProcessing.dir/build.make rcProjPkg/CMakeFiles/joystickProcessing.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=12,13 "Built target joystickProcessing"
@@ -1191,6 +1193,40 @@ rcProjPkg/CMakeFiles/joystickProcessing.dir/clean:
 
 # clean rule for target.
 clean: rcProjPkg/CMakeFiles/joystickProcessing.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir
+
+# All Build rule for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/all
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_data_msg.dir/all
+	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/depend
+	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=18,19,20 "Built target rcProjPkg_generate_messages_eus"
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
+
+# Build rule for subdir invocation for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/SmartRCCar/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/SmartRCCar/build/CMakeFiles 0
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+rcProjPkg_generate_messages_eus: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+
+.PHONY : rcProjPkg_generate_messages_eus
+
+# clean rule for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean:
+	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
+
+# clean rule for target.
+clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
 
 .PHONY : clean
 
@@ -1267,7 +1303,7 @@ rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all: rcProjPkg/CMake
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_data_msg.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=21,22 "Built target rcProjPkg_generate_messages_nodejs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=23,24 "Built target rcProjPkg_generate_messages_nodejs"
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1301,7 +1337,7 @@ rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all: rcProjPkg/CMakeFile
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/all
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/depend
 	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=23,24,25 "Built target rcProjPkg_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=25,26,27 "Built target rcProjPkg_generate_messages_py"
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1423,36 +1459,59 @@ clean: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir
+# Target rules for target rcProjPkg/CMakeFiles/motorControls.dir
 
 # All Build rule for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/all
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_eus.dir/all
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_data_msg.dir/all
-	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/depend
-	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=16,17,18 "Built target rcProjPkg_generate_messages_eus"
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_lisp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/all: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/all
+	$(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/depend
+	$(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/SmartRCCar/build/CMakeFiles --progress-num=14,15 "Built target motorControls"
+.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/all
+
+# Include target in all.
+all: rcProjPkg/CMakeFiles/motorControls.dir/all
+
+.PHONY : all
 
 # Build rule for subdir invocation for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/SmartRCCar/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/all
+rcProjPkg/CMakeFiles/motorControls.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/SmartRCCar/build/CMakeFiles 14
+	$(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/motorControls.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/SmartRCCar/build/CMakeFiles 0
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/rule
 
 # Convenience name for target.
-rcProjPkg_generate_messages_eus: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+motorControls: rcProjPkg/CMakeFiles/motorControls.dir/rule
 
-.PHONY : rcProjPkg_generate_messages_eus
-
-# clean rule for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean:
-	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
+.PHONY : motorControls
 
 # clean rule for target.
-clean: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/clean
+rcProjPkg/CMakeFiles/motorControls.dir/clean:
+	$(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/clean
+.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/clean
+
+# clean rule for target.
+clean: rcProjPkg/CMakeFiles/motorControls.dir/clean
 
 .PHONY : clean
 

@@ -24,21 +24,21 @@ struct motor_controls_msg_
   typedef motor_controls_msg_<ContainerAllocator> Type;
 
   motor_controls_msg_()
-    : mappedX(0)
-    , mappedY(0)  {
+    : mappedX(0.0)
+    , mappedY(0.0)  {
     }
   motor_controls_msg_(const ContainerAllocator& _alloc)
-    : mappedX(0)
-    , mappedY(0)  {
+    : mappedX(0.0)
+    , mappedY(0.0)  {
   (void)_alloc;
     }
 
 
 
-   typedef uint8_t _mappedX_type;
+   typedef double _mappedX_type;
   _mappedX_type mappedX;
 
-   typedef uint8_t _mappedY_type;
+   typedef double _mappedY_type;
   _mappedY_type mappedY;
 
 
@@ -128,12 +128,12 @@ struct MD5Sum< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "7ab62d3467f3d692a3c6d6775f2d4439";
+    return "501e3fc00f088a8af5e28080c514dcc4";
   }
 
   static const char* value(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x7ab62d3467f3d692ULL;
-  static const uint64_t static_value2 = 0xa3c6d6775f2d4439ULL;
+  static const uint64_t static_value1 = 0x501e3fc00f088a8aULL;
+  static const uint64_t static_value2 = 0xf5e28080c514dcc4ULL;
 };
 
 template<class ContainerAllocator>
@@ -152,8 +152,8 @@ struct Definition< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "uint8 mappedX\n"
-"uint8 mappedY\n"
+    return "float64 mappedX\n"
+"float64 mappedY\n"
 ;
   }
 
@@ -193,9 +193,9 @@ struct Printer< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>& v)
   {
     s << indent << "mappedX: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.mappedX);
+    Printer<double>::stream(s, indent + "  ", v.mappedX);
     s << indent << "mappedY: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.mappedY);
+    Printer<double>::stream(s, indent + "  ", v.mappedY);
   }
 };
 

@@ -7,13 +7,13 @@ import struct
 
 
 class motor_controls_msg(genpy.Message):
-  _md5sum = "7ab62d3467f3d692a3c6d6775f2d4439"
+  _md5sum = "501e3fc00f088a8af5e28080c514dcc4"
   _type = "rcProjPkg/motor_controls_msg"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """uint8 mappedX
-uint8 mappedY"""
+  _full_text = """float64 mappedX
+float64 mappedY"""
   __slots__ = ['mappedX','mappedY']
-  _slot_types = ['uint8','uint8']
+  _slot_types = ['float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -33,12 +33,12 @@ uint8 mappedY"""
       super(motor_controls_msg, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
       if self.mappedX is None:
-        self.mappedX = 0
+        self.mappedX = 0.
       if self.mappedY is None:
-        self.mappedY = 0
+        self.mappedY = 0.
     else:
-      self.mappedX = 0
-      self.mappedY = 0
+      self.mappedX = 0.
+      self.mappedY = 0.
 
   def _get_types(self):
     """
@@ -53,7 +53,7 @@ uint8 mappedY"""
     """
     try:
       _x = self
-      buff.write(_get_struct_2B().pack(_x.mappedX, _x.mappedY))
+      buff.write(_get_struct_2d().pack(_x.mappedX, _x.mappedY))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -66,8 +66,8 @@ uint8 mappedY"""
       end = 0
       _x = self
       start = end
-      end += 2
-      (_x.mappedX, _x.mappedY,) = _get_struct_2B().unpack(str[start:end])
+      end += 16
+      (_x.mappedX, _x.mappedY,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -81,7 +81,7 @@ uint8 mappedY"""
     """
     try:
       _x = self
-      buff.write(_get_struct_2B().pack(_x.mappedX, _x.mappedY))
+      buff.write(_get_struct_2d().pack(_x.mappedX, _x.mappedY))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -95,8 +95,8 @@ uint8 mappedY"""
       end = 0
       _x = self
       start = end
-      end += 2
-      (_x.mappedX, _x.mappedY,) = _get_struct_2B().unpack(str[start:end])
+      end += 16
+      (_x.mappedX, _x.mappedY,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -105,9 +105,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_2B = None
-def _get_struct_2B():
-    global _struct_2B
-    if _struct_2B is None:
-        _struct_2B = struct.Struct("<2B")
-    return _struct_2B
+_struct_2d = None
+def _get_struct_2d():
+    global _struct_2d
+    if _struct_2d is None:
+        _struct_2d = struct.Struct("<2d")
+    return _struct_2d

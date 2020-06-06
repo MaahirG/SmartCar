@@ -19,12 +19,12 @@
 (defmethod rcProjPkg::motor_controls_msg
   (:init
    (&key
-    ((:mappedX __mappedX) 0)
-    ((:mappedY __mappedY) 0)
+    ((:mappedX __mappedX) 0.0)
+    ((:mappedY __mappedY) 0.0)
     )
    (send-super :init)
-   (setq _mappedX (round __mappedX))
-   (setq _mappedY (round __mappedY))
+   (setq _mappedX (float __mappedX))
+   (setq _mappedY (float __mappedY))
    self)
   (:mappedX
    (&optional __mappedX)
@@ -35,40 +35,40 @@
   (:serialization-length
    ()
    (+
-    ;; uint8 _mappedX
-    1
-    ;; uint8 _mappedY
-    1
+    ;; float64 _mappedX
+    8
+    ;; float64 _mappedY
+    8
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; uint8 _mappedX
-       (write-byte _mappedX s)
-     ;; uint8 _mappedY
-       (write-byte _mappedY s)
+     ;; float64 _mappedX
+       (sys::poke _mappedX (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _mappedY
+       (sys::poke _mappedY (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; uint8 _mappedX
-     (setq _mappedX (sys::peek buf ptr- :char)) (incf ptr- 1)
-   ;; uint8 _mappedY
-     (setq _mappedY (sys::peek buf ptr- :char)) (incf ptr- 1)
+   ;; float64 _mappedX
+     (setq _mappedX (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _mappedY
+     (setq _mappedY (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get rcProjPkg::motor_controls_msg :md5sum-) "7ab62d3467f3d692a3c6d6775f2d4439")
+(setf (get rcProjPkg::motor_controls_msg :md5sum-) "501e3fc00f088a8af5e28080c514dcc4")
 (setf (get rcProjPkg::motor_controls_msg :datatype-) "rcProjPkg/motor_controls_msg")
 (setf (get rcProjPkg::motor_controls_msg :definition-)
-      "uint8 mappedX
-uint8 mappedY
+      "float64 mappedX
+float64 mappedY
 ")
 
 
 
-(provide :rcProjPkg/motor_controls_msg "7ab62d3467f3d692a3c6d6775f2d4439")
+(provide :rcProjPkg/motor_controls_msg "501e3fc00f088a8af5e28080c514dcc4")
 
 

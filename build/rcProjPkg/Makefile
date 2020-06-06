@@ -101,6 +101,18 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
@@ -122,18 +134,6 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -498,6 +498,21 @@ joystickProcessing/fast:
 .PHONY : joystickProcessing/fast
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+rcProjPkg_generate_messages_eus: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+
+.PHONY : rcProjPkg_generate_messages_eus
+
+# fast build rule for target.
+rcProjPkg_generate_messages_eus/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
+.PHONY : rcProjPkg_generate_messages_eus/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
@@ -603,19 +618,19 @@ roscpp_generate_messages_cpp/fast:
 .PHONY : roscpp_generate_messages_cpp/fast
 
 # Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+rcProjPkg/CMakeFiles/motorControls.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/motorControls.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/rule
 
 # Convenience name for target.
-rcProjPkg_generate_messages_eus: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule
+motorControls: rcProjPkg/CMakeFiles/motorControls.dir/rule
 
-.PHONY : rcProjPkg_generate_messages_eus
+.PHONY : motorControls
 
 # fast build rule for target.
-rcProjPkg_generate_messages_eus/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
-.PHONY : rcProjPkg_generate_messages_eus/fast
+motorControls/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
+.PHONY : motorControls/fast
 
 src/joystickProcessing.o: src/joystickProcessing.cpp.o
 
@@ -643,6 +658,33 @@ src/joystickProcessing.s: src/joystickProcessing.cpp.s
 src/joystickProcessing.cpp.s:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/joystickProcessing.dir/build.make rcProjPkg/CMakeFiles/joystickProcessing.dir/src/joystickProcessing.cpp.s
 .PHONY : src/joystickProcessing.cpp.s
+
+src/motorControls.o: src/motorControls.cpp.o
+
+.PHONY : src/motorControls.o
+
+# target to build an object file
+src/motorControls.cpp.o:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/src/motorControls.cpp.o
+.PHONY : src/motorControls.cpp.o
+
+src/motorControls.i: src/motorControls.cpp.i
+
+.PHONY : src/motorControls.i
+
+# target to preprocess a source file
+src/motorControls.cpp.i:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/src/motorControls.cpp.i
+.PHONY : src/motorControls.cpp.i
+
+src/motorControls.s: src/motorControls.cpp.s
+
+.PHONY : src/motorControls.s
+
+# target to generate assembly for a file
+src/motorControls.cpp.s:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/src/motorControls.cpp.s
+.PHONY : src/motorControls.cpp.s
 
 # Help Target
 help:
@@ -676,6 +718,8 @@ help:
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_eus"
 	@echo "... joystickProcessing"
+	@echo "... install/local"
+	@echo "... rcProjPkg_generate_messages_eus"
 	@echo "... rcProjPkg_geneus"
 	@echo "... rcProjPkg_genlisp"
 	@echo "... test"
@@ -685,11 +729,13 @@ help:
 	@echo "... rcProjPkg_genpy"
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... rebuild_cache"
-	@echo "... rcProjPkg_generate_messages_eus"
-	@echo "... install/local"
+	@echo "... motorControls"
 	@echo "... src/joystickProcessing.o"
 	@echo "... src/joystickProcessing.i"
 	@echo "... src/joystickProcessing.s"
+	@echo "... src/motorControls.o"
+	@echo "... src/motorControls.i"
+	@echo "... src/motorControls.s"
 .PHONY : help
 
 

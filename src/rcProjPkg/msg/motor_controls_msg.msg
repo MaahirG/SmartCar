@@ -1,2 +1,2 @@
-uint8 mappedX
-uint8 mappedY
+float64 mappedX
+float64 mappedY

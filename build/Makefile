@@ -571,6 +571,19 @@ joystickProcessing/fast:
 .PHONY : joystickProcessing/fast
 
 #=============================================================================
+# Target rules for targets named rcProjPkg_generate_messages_eus
+
+# Build rule for target.
+rcProjPkg_generate_messages_eus: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rcProjPkg_generate_messages_eus
+.PHONY : rcProjPkg_generate_messages_eus
+
+# fast build rule for target.
+rcProjPkg_generate_messages_eus/fast:
+	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
+.PHONY : rcProjPkg_generate_messages_eus/fast
+
+#=============================================================================
 # Target rules for targets named rcProjPkg_geneus
 
 # Build rule for target.
@@ -662,17 +675,17 @@ roscpp_generate_messages_cpp/fast:
 .PHONY : roscpp_generate_messages_cpp/fast
 
 #=============================================================================
-# Target rules for targets named rcProjPkg_generate_messages_eus
+# Target rules for targets named motorControls
 
 # Build rule for target.
-rcProjPkg_generate_messages_eus: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rcProjPkg_generate_messages_eus
-.PHONY : rcProjPkg_generate_messages_eus
+motorControls: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 motorControls
+.PHONY : motorControls
 
 # fast build rule for target.
-rcProjPkg_generate_messages_eus/fast:
-	$(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
-.PHONY : rcProjPkg_generate_messages_eus/fast
+motorControls/fast:
+	$(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
+.PHONY : motorControls/fast
 
 # Help Target
 help:
@@ -718,6 +731,7 @@ help:
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_eus"
 	@echo "... joystickProcessing"
+	@echo "... rcProjPkg_generate_messages_eus"
 	@echo "... rcProjPkg_geneus"
 	@echo "... rcProjPkg_genlisp"
 	@echo "... rcProjPkg_generate_messages_nodejs"
@@ -725,7 +739,7 @@ help:
 	@echo "... std_msgs_generate_messages_py"
 	@echo "... rcProjPkg_genpy"
 	@echo "... roscpp_generate_messages_cpp"
-	@echo "... rcProjPkg_generate_messages_eus"
+	@echo "... motorControls"
 .PHONY : help
 
 

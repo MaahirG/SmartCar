@@ -26,13 +26,13 @@ class motor_controls_msg {
         this.mappedX = initObj.mappedX
       }
       else {
-        this.mappedX = 0;
+        this.mappedX = 0.0;
       }
       if (initObj.hasOwnProperty('mappedY')) {
         this.mappedY = initObj.mappedY
       }
       else {
-        this.mappedY = 0;
+        this.mappedY = 0.0;
       }
     }
   }
@@ -40,9 +40,9 @@ class motor_controls_msg {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type motor_controls_msg
     // Serialize message field [mappedX]
-    bufferOffset = _serializer.uint8(obj.mappedX, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.mappedX, buffer, bufferOffset);
     // Serialize message field [mappedY]
-    bufferOffset = _serializer.uint8(obj.mappedY, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.mappedY, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -51,14 +51,14 @@ class motor_controls_msg {
     let len;
     let data = new motor_controls_msg(null);
     // Deserialize message field [mappedX]
-    data.mappedX = _deserializer.uint8(buffer, bufferOffset);
+    data.mappedX = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [mappedY]
-    data.mappedY = _deserializer.uint8(buffer, bufferOffset);
+    data.mappedY = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 2;
+    return 16;
   }
 
   static datatype() {
@@ -68,14 +68,14 @@ class motor_controls_msg {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '7ab62d3467f3d692a3c6d6775f2d4439';
+    return '501e3fc00f088a8af5e28080c514dcc4';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    uint8 mappedX
-    uint8 mappedY
+    float64 mappedX
+    float64 mappedY
     `;
   }
 
@@ -89,14 +89,14 @@ class motor_controls_msg {
       resolved.mappedX = msg.mappedX;
     }
     else {
-      resolved.mappedX = 0
+      resolved.mappedX = 0.0
     }
 
     if (msg.mappedY !== undefined) {
       resolved.mappedY = msg.mappedY;
     }
     else {
-      resolved.mappedY = 0
+      resolved.mappedY = 0.0
     }
 
     return resolved;
