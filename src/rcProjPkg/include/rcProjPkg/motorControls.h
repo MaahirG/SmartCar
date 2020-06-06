@@ -1,5 +1,5 @@
-#ifndef __JOY_STICK_PROCESSING_H__
-#define __JOY_STICK_PROCESSING_H__
+#ifndef __MOTOR_CONTROLS_H__
+#define __MOTOR_CONTROLS_H__
 
 #include "cstdlib"
 #include "ros/ros.h"
