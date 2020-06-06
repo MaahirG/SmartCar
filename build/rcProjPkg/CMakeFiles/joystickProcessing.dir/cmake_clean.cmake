@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/joystickProcessing.dir/src/joystickProcessing.cpp.o"
-  "/home/maahir/rcProject_ws/devel/lib/rcProjPkg/joystickProcessing.pdb"
-  "/home/maahir/rcProject_ws/devel/lib/rcProjPkg/joystickProcessing"
+  "/home/ubuntu/SmartRCCar/devel/lib/rcProjPkg/joystickProcessing.pdb"
+  "/home/ubuntu/SmartRCCar/devel/lib/rcProjPkg/joystickProcessing"
 )
 
 # Per-language clean rules from dependency scanning.
