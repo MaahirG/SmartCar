@@ -5,7 +5,12 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "rcProjPkg/motor_controls_msg.h"
+
+
+#ifdef __arm__
 #include <wiringPi.h>
+#endif
+
 
 #define MSG_BUFFER_SIZE 10
 #define CONTROLS_TO_PI_TOPIC "to_pi"

@@ -165,9 +165,15 @@ include_directories(
    ${catkin_LIBRARIES}
  )
 
-  target_link_libraries(motorControls
-   ${catkin_LIBRARIES} -lwiringPi
- )
+
+# TO ALLOW USAGE ON X86 PLATFORMS TOO WHERE WIRINGPI IS NOT NEEDED
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+
+if (${ARCHITECTURE} MATCHES "arm")
+    target_link_libraries(motorControls ${catkin_LIBRARIES} -lwiringPi)
+else()
+    target_link_libraries(motorControls ${catkin_LIBRARIES})
+endif()
 
 
 
