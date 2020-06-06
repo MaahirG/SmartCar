@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/motorControls.dir/src/motorControls.cpp.o"
-  "/home/ubuntu/SmartRCCar/devel/lib/rcProjPkg/motorControls.pdb"
-  "/home/ubuntu/SmartRCCar/devel/lib/rcProjPkg/motorControls"
+  "/home/maahir/rcProject_ws/devel/lib/rcProjPkg/motorControls.pdb"
+  "/home/maahir/rcProject_ws/devel/lib/rcProjPkg/motorControls"
 )
 
 # Per-language clean rules from dependency scanning.

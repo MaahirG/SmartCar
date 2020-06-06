@@ -6,9 +6,7 @@
 #include "std_msgs/String.h"
 #include "rcProjPkg/data_msg.h"
 #include "rcProjPkg/motor_controls_msg.h"
-#include <wiringPi.h>
 
-#define LED_PIN 0
 
 #define DATA_TRANSFER_TOPIC "from_sensor_topic"
 #define MSG_BUFFER_SIZE 10

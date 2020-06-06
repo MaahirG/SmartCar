@@ -7,4 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export PWD="/home/ubuntu/SmartRCCar/build"
+export LD_LIBRARY_PATH="/home/maahir/uwaft/kaiROS/devel/lib:/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu"
+export PKG_CONFIG_PATH="/home/maahir/uwaft/kaiROS/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig"
+export PWD="/home/maahir/rcProject_ws/build"
+export PYTHONPATH="/home/maahir/uwaft/kaiROS/devel/lib/python2.7/dist-packages:/opt/ros/kinetic/lib/python2.7/dist-packages"

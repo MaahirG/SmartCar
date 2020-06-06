@@ -2,7 +2,7 @@
 
 message(STATUS "rcProjPkg: 2 messages, 0 services")
 
-set(MSG_I_FLAGS "-IrcProjPkg:/home/ubuntu/SmartRCCar/src/rcProjPkg/msg;-Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-IrcProjPkg:/home/maahir/rcProject_ws/src/rcProjPkg/msg;-Istd_msgs:/opt/ros/kinetic/share/std_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -17,14 +17,14 @@ add_custom_target(rcProjPkg_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_custom_target(_rcProjPkg_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rcProjPkg" "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rcProjPkg" "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" ""
 )
 
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_custom_target(_rcProjPkg_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rcProjPkg" "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rcProjPkg" "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" ""
 )
 
 #
@@ -34,13 +34,13 @@ add_custom_target(_rcProjPkg_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rcProjPkg
 )
 _generate_msg_cpp(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rcProjPkg
@@ -60,9 +60,9 @@ add_custom_target(rcProjPkg_generate_messages_cpp
 add_dependencies(rcProjPkg_generate_messages rcProjPkg_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_cpp _rcProjPkg_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_cpp _rcProjPkg_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -75,13 +75,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rcProjPkg_generate_messages_cpp)
 ### Section generating for lang: geneus
 ### Generating Messages
 _generate_msg_eus(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rcProjPkg
 )
 _generate_msg_eus(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rcProjPkg
@@ -101,9 +101,9 @@ add_custom_target(rcProjPkg_generate_messages_eus
 add_dependencies(rcProjPkg_generate_messages rcProjPkg_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_eus _rcProjPkg_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_eus _rcProjPkg_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -116,13 +116,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rcProjPkg_generate_messages_eus)
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rcProjPkg
 )
 _generate_msg_lisp(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rcProjPkg
@@ -142,9 +142,9 @@ add_custom_target(rcProjPkg_generate_messages_lisp
 add_dependencies(rcProjPkg_generate_messages rcProjPkg_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_lisp _rcProjPkg_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_lisp _rcProjPkg_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -157,13 +157,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rcProjPkg_generate_messages_lisp)
 ### Section generating for lang: gennodejs
 ### Generating Messages
 _generate_msg_nodejs(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rcProjPkg
 )
 _generate_msg_nodejs(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rcProjPkg
@@ -183,9 +183,9 @@ add_custom_target(rcProjPkg_generate_messages_nodejs
 add_dependencies(rcProjPkg_generate_messages rcProjPkg_generate_messages_nodejs)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_nodejs _rcProjPkg_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_nodejs _rcProjPkg_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -198,13 +198,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rcProjPkg_generate_messages_nodejs)
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg
 )
 _generate_msg_py(rcProjPkg
-  "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg"
+  "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg
@@ -224,9 +224,9 @@ add_custom_target(rcProjPkg_generate_messages_py
 add_dependencies(rcProjPkg_generate_messages rcProjPkg_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/data_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_py _rcProjPkg_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/ubuntu/SmartRCCar/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
+get_filename_component(_filename "/home/maahir/rcProject_ws/src/rcProjPkg/msg/motor_controls_msg.msg" NAME_WE)
 add_dependencies(rcProjPkg_generate_messages_py _rcProjPkg_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -283,7 +283,7 @@ if(TARGET std_msgs_generate_messages_nodejs)
 endif()
 
 if(genpy_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg)
-  install(CODE "execute_process(COMMAND \"/usr/bin/python2\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg\")")
+  install(CODE "execute_process(COMMAND \"/usr/bin/python\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg\")")
   # install generated code
   install(
     DIRECTORY ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rcProjPkg

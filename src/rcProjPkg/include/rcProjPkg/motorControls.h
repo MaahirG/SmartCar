@@ -8,7 +8,7 @@
 
 
 #ifdef __arm__
-#include <wiringPi.h>
+    #include <wiringPi.h>
 #endif
 
 

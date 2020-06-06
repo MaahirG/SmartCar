@@ -1,8 +1,8 @@
-prefix=/home/ubuntu/SmartRCCar/install
+prefix=/home/maahir/rcProject_ws/install
 
 Name: rcProjPkg
 Description: Description of rcProjPkg
 Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
+Cflags: -I/home/maahir/rcProject_ws/install/include
+Libs: -L/home/maahir/rcProject_ws/install/lib 
 Requires: 

@@ -1,5 +1,4 @@
 
-#include <wiringPi.h>
 #include "rcProjPkg/motorControls.h"
 
 
