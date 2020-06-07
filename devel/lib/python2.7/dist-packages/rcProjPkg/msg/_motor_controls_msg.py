@@ -7,13 +7,13 @@ import struct
 
 
 class motor_controls_msg(genpy.Message):
-  _md5sum = "501e3fc00f088a8af5e28080c514dcc4"
+  _md5sum = "ebe86334728fd6e669c7a988dbec2160"
   _type = "rcProjPkg/motor_controls_msg"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """float64 mappedX
-float64 mappedY"""
-  __slots__ = ['mappedX','mappedY']
-  _slot_types = ['float64','float64']
+  _full_text = """float32 angle
+float32 magnitude"""
+  __slots__ = ['angle','magnitude']
+  _slot_types = ['float32','float32']
 
   def __init__(self, *args, **kwds):
     """
@@ -23,7 +23,7 @@ float64 mappedY"""
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       mappedX,mappedY
+       angle,magnitude
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -32,13 +32,13 @@ float64 mappedY"""
     if args or kwds:
       super(motor_controls_msg, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
-      if self.mappedX is None:
-        self.mappedX = 0.
-      if self.mappedY is None:
-        self.mappedY = 0.
+      if self.angle is None:
+        self.angle = 0.
+      if self.magnitude is None:
+        self.magnitude = 0.
     else:
-      self.mappedX = 0.
-      self.mappedY = 0.
+      self.angle = 0.
+      self.magnitude = 0.
 
   def _get_types(self):
     """
@@ -53,7 +53,7 @@ float64 mappedY"""
     """
     try:
       _x = self
-      buff.write(_get_struct_2d().pack(_x.mappedX, _x.mappedY))
+      buff.write(_get_struct_2f().pack(_x.angle, _x.magnitude))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -66,8 +66,8 @@ float64 mappedY"""
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.mappedX, _x.mappedY,) = _get_struct_2d().unpack(str[start:end])
+      end += 8
+      (_x.angle, _x.magnitude,) = _get_struct_2f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -81,7 +81,7 @@ float64 mappedY"""
     """
     try:
       _x = self
-      buff.write(_get_struct_2d().pack(_x.mappedX, _x.mappedY))
+      buff.write(_get_struct_2f().pack(_x.angle, _x.magnitude))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -95,8 +95,8 @@ float64 mappedY"""
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.mappedX, _x.mappedY,) = _get_struct_2d().unpack(str[start:end])
+      end += 8
+      (_x.angle, _x.magnitude,) = _get_struct_2f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -105,9 +105,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_2d = None
-def _get_struct_2d():
-    global _struct_2d
-    if _struct_2d is None:
-        _struct_2d = struct.Struct("<2d")
-    return _struct_2d
+_struct_2f = None
+def _get_struct_2f():
+    global _struct_2f
+    if _struct_2f is None:
+        _struct_2f = struct.Struct("<2f")
+    return _struct_2f

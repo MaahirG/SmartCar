@@ -5,12 +5,15 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "rcProjPkg/motor_controls_msg.h"
+#include <math.h>
+// #include <wiringPi.h>
+// #include <softPwm.h>
 
-
-#include <wiringPi.h>
 
 #define MSG_BUFFER_SIZE 10
 #define CONTROLS_TO_PI_TOPIC "to_pi"
+#define PI 3.14159265
+
 
 class motorControlClass {
     public:

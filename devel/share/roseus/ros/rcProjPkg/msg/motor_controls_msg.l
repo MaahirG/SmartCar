@@ -14,61 +14,61 @@
 
 (defclass rcProjPkg::motor_controls_msg
   :super ros::object
-  :slots (_mappedX _mappedY ))
+  :slots (_angle _magnitude ))
 
 (defmethod rcProjPkg::motor_controls_msg
   (:init
    (&key
-    ((:mappedX __mappedX) 0.0)
-    ((:mappedY __mappedY) 0.0)
+    ((:angle __angle) 0.0)
+    ((:magnitude __magnitude) 0.0)
     )
    (send-super :init)
-   (setq _mappedX (float __mappedX))
-   (setq _mappedY (float __mappedY))
+   (setq _angle (float __angle))
+   (setq _magnitude (float __magnitude))
    self)
-  (:mappedX
-   (&optional __mappedX)
-   (if __mappedX (setq _mappedX __mappedX)) _mappedX)
-  (:mappedY
-   (&optional __mappedY)
-   (if __mappedY (setq _mappedY __mappedY)) _mappedY)
+  (:angle
+   (&optional __angle)
+   (if __angle (setq _angle __angle)) _angle)
+  (:magnitude
+   (&optional __magnitude)
+   (if __magnitude (setq _magnitude __magnitude)) _magnitude)
   (:serialization-length
    ()
    (+
-    ;; float64 _mappedX
-    8
-    ;; float64 _mappedY
-    8
+    ;; float32 _angle
+    4
+    ;; float32 _magnitude
+    4
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; float64 _mappedX
-       (sys::poke _mappedX (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _mappedY
-       (sys::poke _mappedY (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float32 _angle
+       (sys::poke _angle (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; float32 _magnitude
+       (sys::poke _magnitude (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; float64 _mappedX
-     (setq _mappedX (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _mappedY
-     (setq _mappedY (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float32 _angle
+     (setq _angle (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; float32 _magnitude
+     (setq _magnitude (sys::peek buf ptr- :float)) (incf ptr- 4)
    ;;
    self)
   )
 
-(setf (get rcProjPkg::motor_controls_msg :md5sum-) "501e3fc00f088a8af5e28080c514dcc4")
+(setf (get rcProjPkg::motor_controls_msg :md5sum-) "ebe86334728fd6e669c7a988dbec2160")
 (setf (get rcProjPkg::motor_controls_msg :datatype-) "rcProjPkg/motor_controls_msg")
 (setf (get rcProjPkg::motor_controls_msg :definition-)
-      "float64 mappedX
-float64 mappedY
+      "float32 angle
+float32 magnitude
 ")
 
 
 
-(provide :rcProjPkg/motor_controls_msg "501e3fc00f088a8af5e28080c514dcc4")
+(provide :rcProjPkg/motor_controls_msg "ebe86334728fd6e669c7a988dbec2160")
 
 

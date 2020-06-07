@@ -1,2 +1,2 @@
-float64 mappedX
-float64 mappedY
+float32 angle
+float32 magnitude

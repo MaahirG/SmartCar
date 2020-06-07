@@ -24,22 +24,22 @@ struct motor_controls_msg_
   typedef motor_controls_msg_<ContainerAllocator> Type;
 
   motor_controls_msg_()
-    : mappedX(0.0)
-    , mappedY(0.0)  {
+    : angle(0.0)
+    , magnitude(0.0)  {
     }
   motor_controls_msg_(const ContainerAllocator& _alloc)
-    : mappedX(0.0)
-    , mappedY(0.0)  {
+    : angle(0.0)
+    , magnitude(0.0)  {
   (void)_alloc;
     }
 
 
 
-   typedef double _mappedX_type;
-  _mappedX_type mappedX;
+   typedef float _angle_type;
+  _angle_type angle;
 
-   typedef double _mappedY_type;
-  _mappedY_type mappedY;
+   typedef float _magnitude_type;
+  _magnitude_type magnitude;
 
 
 
@@ -70,8 +70,8 @@ return s;
 template<typename ContainerAllocator1, typename ContainerAllocator2>
 bool operator==(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator1> & lhs, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator2> & rhs)
 {
-  return lhs.mappedX == rhs.mappedX &&
-    lhs.mappedY == rhs.mappedY;
+  return lhs.angle == rhs.angle &&
+    lhs.magnitude == rhs.magnitude;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -128,12 +128,12 @@ struct MD5Sum< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "501e3fc00f088a8af5e28080c514dcc4";
+    return "ebe86334728fd6e669c7a988dbec2160";
   }
 
   static const char* value(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x501e3fc00f088a8aULL;
-  static const uint64_t static_value2 = 0xf5e28080c514dcc4ULL;
+  static const uint64_t static_value1 = 0xebe86334728fd6e6ULL;
+  static const uint64_t static_value2 = 0x69c7a988dbec2160ULL;
 };
 
 template<class ContainerAllocator>
@@ -152,8 +152,8 @@ struct Definition< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "float64 mappedX\n"
-"float64 mappedY\n"
+    return "float32 angle\n"
+"float32 magnitude\n"
 ;
   }
 
@@ -172,8 +172,8 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.mappedX);
-      stream.next(m.mappedY);
+      stream.next(m.angle);
+      stream.next(m.magnitude);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -192,10 +192,10 @@ struct Printer< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>& v)
   {
-    s << indent << "mappedX: ";
-    Printer<double>::stream(s, indent + "  ", v.mappedX);
-    s << indent << "mappedY: ";
-    Printer<double>::stream(s, indent + "  ", v.mappedY);
+    s << indent << "angle: ";
+    Printer<float>::stream(s, indent + "  ", v.angle);
+    s << indent << "magnitude: ";
+    Printer<float>::stream(s, indent + "  ", v.magnitude);
   }
 };
 

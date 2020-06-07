@@ -38,24 +38,16 @@
   (y m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <data_msg>) ostream)
   "Serializes a message object of type '<data_msg>"
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'x))))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'x))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'y))))
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'y))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <data_msg>) istream)
   "Deserializes a message object of type '<data_msg>"
@@ -64,21 +56,13 @@
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'x) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:setf (cl:slot-value msg 'x) (roslisp-utils:decode-single-float-bits bits)))
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'y) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:setf (cl:slot-value msg 'y) (roslisp-utils:decode-single-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<data_msg>)))
@@ -89,20 +73,20 @@
   "rcProjPkg/data_msg")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<data_msg>)))
   "Returns md5sum for a message object of type '<data_msg>"
-  "209f516d3eb691f0663e25cb750d67c1")
+  "ff8d7d66dd3e4b731ef14a45d38888b6")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'data_msg)))
   "Returns md5sum for a message object of type 'data_msg"
-  "209f516d3eb691f0663e25cb750d67c1")
+  "ff8d7d66dd3e4b731ef14a45d38888b6")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<data_msg>)))
   "Returns full string definition for message of type '<data_msg>"
-  (cl:format cl:nil "float64 x~%float64 y~%~%"))
+  (cl:format cl:nil "float32 x~%float32 y~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'data_msg)))
   "Returns full string definition for message of type 'data_msg"
-  (cl:format cl:nil "float64 x~%float64 y~%~%"))
+  (cl:format cl:nil "float32 x~%float32 y~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <data_msg>))
   (cl:+ 0
-     8
-     8
+     4
+     4
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <data_msg>))
   "Converts a ROS message object to a list"

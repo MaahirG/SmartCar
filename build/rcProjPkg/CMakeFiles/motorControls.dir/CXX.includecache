@@ -31,6 +31,8 @@ std_msgs/String.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/std_msgs/String.h
 rcProjPkg/motor_controls_msg.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/motor_controls_msg.h
+math.h
+-
 wiringPi.h
 -
 

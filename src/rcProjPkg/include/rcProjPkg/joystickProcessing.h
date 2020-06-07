@@ -6,7 +6,7 @@
 #include "std_msgs/String.h"
 #include "rcProjPkg/data_msg.h"
 #include "rcProjPkg/motor_controls_msg.h"
-
+#include <math.h>
 
 #define DATA_TRANSFER_TOPIC "from_sensor_topic"
 #define MSG_BUFFER_SIZE 10

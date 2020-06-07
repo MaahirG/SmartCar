@@ -49,6 +49,8 @@ rcProjPkg/data_msg.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/data_msg.h
 rcProjPkg/motor_controls_msg.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/motor_controls_msg.h
+math.h
+-
 
 /home/ubuntu/SmartRCCar/src/rcProjPkg/src/joystickProcessing.cpp
 rcProjPkg/joystickProcessing.h
