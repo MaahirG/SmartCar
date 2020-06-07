@@ -12,15 +12,24 @@ rosrun rosserial_arduino serial_node.py _port:= /dev/ttyACM0 <-- serial port sho
 optional: _baud:=9600 (remember to change in ArduinoHardware h file inside ros_lib)
 */
 
+ros::NodeHandle nh;
+rcProjPkg::data_msg msg;
+ros::Publisher pub("from_sensor_topic", &msg);
+
 void setup() {
-    nh.initNode();
-    ros::Publisher pub = node_handle.advertise<data_msg>("from_sensor_topic", 10);
+  nh.initNode();
+  nh.advertise(pub);
 }
 
 void loop() {
-    data_msg.x = analogRead(A1);
-    data_msg.y = analogRead(A0);
-
-    pub.publish(data_msg);
-    delay(500);
+  int x, y;
+  msg.x = analogRead(A1);
+  msg.y = analogRead(A0);
+//   Serial.println(x);
+//   Serial.println(y);
+  pub.publish(&msg);
+  nh.spinOnce();
+  // don't actually need a delay (add a delay for slower data reading from joystick)
+  // arduino doesn't like float32 in ros msgs
+  // anytime added/changed a ROS msg --> re make the ros_lib (make_libraries_py .)
 }

@@ -1,2 +1,2 @@
-float32 angle
-float32 magnitude
+float64 angle
+float64 magnitude

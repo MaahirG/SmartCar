@@ -13,7 +13,6 @@
 //     digitalWrite(left_mterminal_2, 0);
 //     digitalWrite(right_mterminal_1, 0);
 //     digitalWrite(right_mterminal_2, 0);
-//     //pwm.stop();
 // }
 
 
@@ -53,8 +52,7 @@ int main(int argc, char ** argv){
     // pinMode(left_mterminal_2, OUTPUT);
     // pinMode(right_mterminal_1, OUTPUT);
     // pinMode(right_mterminal_2, OUTPUT);
-    // pinMode(left_pwm, PWM_OUTPUT);
-    // pinMode(right_pwm, PWM_OUTPUT);
+
 
     ros::spin();
 

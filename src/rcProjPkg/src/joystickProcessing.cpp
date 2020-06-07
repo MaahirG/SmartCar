@@ -31,7 +31,8 @@ void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){
     double magnitude = sqrt(pow(mapX,2) + pow(mapY,2));
     mapped_obj_msg.angle = angle;
     mapped_obj_msg.magnitude = magnitude;
-
+    
+    std::cout << "Mapped data: " << "MAPX: " << mapX << " MAPY: " << mapY << std::endl;
     std::cout << "Mapped data: " << "ANGLE: " << angle << " MAG: " << magnitude << std::endl;
 
     pub_to_pi.publish(mapped_obj_msg);
