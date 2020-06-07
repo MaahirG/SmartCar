@@ -35,40 +35,40 @@
   (:serialization-length
    ()
    (+
-    ;; float32 _angle
-    4
-    ;; float32 _magnitude
-    4
+    ;; float64 _angle
+    8
+    ;; float64 _magnitude
+    8
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; float32 _angle
-       (sys::poke _angle (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
-     ;; float32 _magnitude
-       (sys::poke _magnitude (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; float64 _angle
+       (sys::poke _angle (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _magnitude
+       (sys::poke _magnitude (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; float32 _angle
-     (setq _angle (sys::peek buf ptr- :float)) (incf ptr- 4)
-   ;; float32 _magnitude
-     (setq _magnitude (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; float64 _angle
+     (setq _angle (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _magnitude
+     (setq _magnitude (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get rcProjPkg::motor_controls_msg :md5sum-) "ebe86334728fd6e669c7a988dbec2160")
+(setf (get rcProjPkg::motor_controls_msg :md5sum-) "9f60d5cf267edc4256952dd2a35a600f")
 (setf (get rcProjPkg::motor_controls_msg :datatype-) "rcProjPkg/motor_controls_msg")
 (setf (get rcProjPkg::motor_controls_msg :definition-)
-      "float32 angle
-float32 magnitude
+      "float64 angle
+float64 magnitude
 ")
 
 
 
-(provide :rcProjPkg/motor_controls_msg "ebe86334728fd6e669c7a988dbec2160")
+(provide :rcProjPkg/motor_controls_msg "9f60d5cf267edc4256952dd2a35a600f")
 
 

@@ -38,16 +38,24 @@
   (magnitude m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <motor_controls_msg>) ostream)
   "Serializes a message object of type '<motor_controls_msg>"
-  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'angle))))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'angle))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'magnitude))))
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'magnitude))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <motor_controls_msg>) istream)
   "Deserializes a message object of type '<motor_controls_msg>"
@@ -56,13 +64,21 @@
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'angle) (roslisp-utils:decode-single-float-bits bits)))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'angle) (roslisp-utils:decode-double-float-bits bits)))
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'magnitude) (roslisp-utils:decode-single-float-bits bits)))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'magnitude) (roslisp-utils:decode-double-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<motor_controls_msg>)))
@@ -73,20 +89,20 @@
   "rcProjPkg/motor_controls_msg")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<motor_controls_msg>)))
   "Returns md5sum for a message object of type '<motor_controls_msg>"
-  "ebe86334728fd6e669c7a988dbec2160")
+  "9f60d5cf267edc4256952dd2a35a600f")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'motor_controls_msg)))
   "Returns md5sum for a message object of type 'motor_controls_msg"
-  "ebe86334728fd6e669c7a988dbec2160")
+  "9f60d5cf267edc4256952dd2a35a600f")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<motor_controls_msg>)))
   "Returns full string definition for message of type '<motor_controls_msg>"
-  (cl:format cl:nil "float32 angle~%float32 magnitude~%~%"))
+  (cl:format cl:nil "float64 angle~%float64 magnitude~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'motor_controls_msg)))
   "Returns full string definition for message of type 'motor_controls_msg"
-  (cl:format cl:nil "float32 angle~%float32 magnitude~%~%"))
+  (cl:format cl:nil "float64 angle~%float64 magnitude~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <motor_controls_msg>))
   (cl:+ 0
-     4
-     4
+     8
+     8
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <motor_controls_msg>))
   "Converts a ROS message object to a list"

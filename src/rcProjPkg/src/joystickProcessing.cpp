@@ -27,8 +27,9 @@ void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){
 
     // atan2: principal - quadrant value in degrees
     // +360 %360 makes negative angle values between 0-180 (what atan2 outputs for quadrants 3&4 into 0-360 range)
-    double angle = fmod(((atan2(mapY,mapX) * 180 / M_PI)+360), 360);
-    double magnitude = sqrt(pow(mapX,2) + pow(mapY,2));
+    int angle = fmod(((atan2(mapY,mapX) * 180 / M_PI)+360), 360);
+    int magnitude = sqrt(pow(mapX,2) + pow(mapY,2));
+    // IMPORTANT: NEEDS TO BE A FLOAT ANGLE AND MAGNITUDE OTHERWISE ROS MSG WILL GIVE ERROR md5sum mismatch
     mapped_obj_msg.angle = angle;
     mapped_obj_msg.magnitude = magnitude;
     

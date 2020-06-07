@@ -40,9 +40,9 @@ class motor_controls_msg {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type motor_controls_msg
     // Serialize message field [angle]
-    bufferOffset = _serializer.float32(obj.angle, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.angle, buffer, bufferOffset);
     // Serialize message field [magnitude]
-    bufferOffset = _serializer.float32(obj.magnitude, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.magnitude, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -51,14 +51,14 @@ class motor_controls_msg {
     let len;
     let data = new motor_controls_msg(null);
     // Deserialize message field [angle]
-    data.angle = _deserializer.float32(buffer, bufferOffset);
+    data.angle = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [magnitude]
-    data.magnitude = _deserializer.float32(buffer, bufferOffset);
+    data.magnitude = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 8;
+    return 16;
   }
 
   static datatype() {
@@ -68,14 +68,14 @@ class motor_controls_msg {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return 'ebe86334728fd6e669c7a988dbec2160';
+    return '9f60d5cf267edc4256952dd2a35a600f';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    float32 angle
-    float32 magnitude
+    float64 angle
+    float64 magnitude
     `;
   }
 

@@ -35,10 +35,10 @@ struct motor_controls_msg_
 
 
 
-   typedef float _angle_type;
+   typedef double _angle_type;
   _angle_type angle;
 
-   typedef float _magnitude_type;
+   typedef double _magnitude_type;
   _magnitude_type magnitude;
 
 
@@ -128,12 +128,12 @@ struct MD5Sum< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "ebe86334728fd6e669c7a988dbec2160";
+    return "9f60d5cf267edc4256952dd2a35a600f";
   }
 
   static const char* value(const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xebe86334728fd6e6ULL;
-  static const uint64_t static_value2 = 0x69c7a988dbec2160ULL;
+  static const uint64_t static_value1 = 0x9f60d5cf267edc42ULL;
+  static const uint64_t static_value2 = 0x56952dd2a35a600fULL;
 };
 
 template<class ContainerAllocator>
@@ -152,8 +152,8 @@ struct Definition< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "float32 angle\n"
-"float32 magnitude\n"
+    return "float64 angle\n"
+"float64 magnitude\n"
 ;
   }
 
@@ -193,9 +193,9 @@ struct Printer< ::rcProjPkg::motor_controls_msg_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::rcProjPkg::motor_controls_msg_<ContainerAllocator>& v)
   {
     s << indent << "angle: ";
-    Printer<float>::stream(s, indent + "  ", v.angle);
+    Printer<double>::stream(s, indent + "  ", v.angle);
     s << indent << "magnitude: ";
-    Printer<float>::stream(s, indent + "  ", v.magnitude);
+    Printer<double>::stream(s, indent + "  ", v.magnitude);
   }
 };
 
