@@ -167,8 +167,8 @@ target_link_libraries(joystickProcessing ${catkin_LIBRARIES} )
 # TO ALLOW USAGE ON X86 PLATFORMS TOO WHERE WIRINGPI IS NOT NEEDED
 #EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 
-#target_link_libraries(motorControls ${catkin_LIBRARIES} -lwiringPi -lrt)
-target_link_libraries(motorControls ${catkin_LIBRARIES})
+target_link_libraries(motorControls ${catkin_LIBRARIES} -lwiringPi -lrt)
+#target_link_libraries(motorControls ${catkin_LIBRARIES})
 
 
 

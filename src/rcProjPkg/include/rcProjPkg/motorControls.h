@@ -6,7 +6,7 @@
 #include "std_msgs/String.h"
 #include "rcProjPkg/motor_controls_msg.h"
 #include <math.h>
-// #include <wiringPi.h>
+#include <wiringPi.h>
 // #include <softPwm.h>
 
 

@@ -47,11 +47,11 @@ int main(int argc, char ** argv){
     motorControlClass controls = motorControlClass(node_handle);
     std::cout<<"Motor Controls Node Initiated"<<std::endl;
     
-    // wiringPiSetupGpio();
-    // pinMode(left_mterminal_1, OUTPUT);
-    // pinMode(left_mterminal_2, OUTPUT);
-    // pinMode(right_mterminal_1, OUTPUT);
-    // pinMode(right_mterminal_2, OUTPUT);
+    wiringPiSetupGpio();
+    pinMode(left_mterminal_1, OUTPUT);
+    pinMode(left_mterminal_2, OUTPUT);
+    pinMode(right_mterminal_1, OUTPUT);
+    pinMode(right_mterminal_2, OUTPUT);
 
 
     ros::spin();

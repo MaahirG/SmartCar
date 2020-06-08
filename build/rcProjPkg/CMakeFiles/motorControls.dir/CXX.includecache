@@ -33,6 +33,8 @@ rcProjPkg/motor_controls_msg.h
 /home/ubuntu/SmartRCCar/src/rcProjPkg/include/rcProjPkg/rcProjPkg/motor_controls_msg.h
 math.h
 -
+wiringPi.h
+-
 
 /home/ubuntu/SmartRCCar/src/rcProjPkg/src/motorControls.cpp
 rcProjPkg/motorControls.h
