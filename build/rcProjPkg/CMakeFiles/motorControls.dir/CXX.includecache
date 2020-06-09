@@ -35,6 +35,8 @@ math.h
 -
 wiringPi.h
 -
+softPwm.h
+-
 
 /home/ubuntu/SmartRCCar/src/rcProjPkg/src/motorControls.cpp
 rcProjPkg/motorControls.h

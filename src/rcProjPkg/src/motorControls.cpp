@@ -3,10 +3,10 @@
 
 #define left_mterminal_1 25
 #define left_mterminal_2 8
-#define right_mterminal_1 7
-#define right_mterminal_2 1
-#define left_pwm 12
-#define right_pwm 13
+#define right_mterminal_1 7 //right motor
+#define right_mterminal_2 1 //right motor 
+#define left_pwm 12 //green
+#define right_pwm 13 //black
 
 // void stop(){
 //     digitalWrite(left_mterminal_1, 0);
@@ -24,12 +24,23 @@ motorControlClass::motorControlClass(ros::NodeHandle node_handle) : node_handle(
 
 void motorControlClass::motor_control_callback(rcProjPkg::motor_controls_msg motorMsg){
 // #ifdef __arm__
-
-    // ROS_INFO("GPIO has been set as OUTPUT.");
-    // ROS_INFO("Set GPIO HIGH");
-    // ros::Duration(1.0).sleep();
-    // ROS_INFO("Set GPIO LOW");
-    // ros::Duration(1.0).sleep();
+    if(motorMsg.magnitude > 20 && motorMsg.magnitude < 40){
+        ROS_INFO("MOTORS AT 50");
+        softPwmWrite(left_pwm, 50);
+        softPwmWrite(right_pwm, 50);
+    } else if(motorMsg.magnitude >= 40){
+        ROS_INFO("MOTORS AT 100");
+        softPwmWrite(left_pwm, 100);
+        softPwmWrite(right_pwm, 100);
+    } else if(motorMsg.magnitude <= 5){
+        ROS_INFO("MOTORS AT 0");
+        softPwmWrite(left_pwm, 0);
+        softPwmWrite(right_pwm, 0);
+    } else {
+        ROS_INFO("MOTORS AT 25");
+        softPwmWrite(left_pwm, 25);
+        softPwmWrite(right_pwm, 25);
+    }
 
 // #else
 
@@ -53,7 +64,11 @@ int main(int argc, char ** argv){
     pinMode(right_mterminal_1, OUTPUT);
     pinMode(right_mterminal_2, OUTPUT);
 
+    softPwmCreate(right_pwm,0,100);
+    softPwmCreate(left_pwm,0,100);
 
+    digitalWrite(7, HIGH);
+    digitalWrite(1, LOW);
     ros::spin();
 
 }
