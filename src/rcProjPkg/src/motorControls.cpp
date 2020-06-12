@@ -5,8 +5,8 @@
 #define left_mterminal_2 8
 #define right_mterminal_1 7 //right motor
 #define right_mterminal_2 1 //right motor 
-#define left_pwm 12 //green
-#define right_pwm 13 //black
+#define left_pwm 13 //black
+#define right_pwm 12 //green
 
 // void stop(){
 //     digitalWrite(left_mterminal_1, 0);
@@ -24,11 +24,15 @@ motorControlClass::motorControlClass(ros::NodeHandle node_handle) : node_handle(
 
 void motorControlClass::motor_control_callback(rcProjPkg::motor_controls_msg motorMsg){
 // #ifdef __arm__
-    if(motorMsg.magnitude > 20 && motorMsg.magnitude < 40){
+    if(motorMsg.magnitude > 15 && motorMsg.magnitude <= 25){
         ROS_INFO("MOTORS AT 50");
         softPwmWrite(left_pwm, 50);
         softPwmWrite(right_pwm, 50);
-    } else if(motorMsg.magnitude >= 40){
+    } else if(motorMsg.magnitude > 25 && motorMsg.magnitude < 45){
+        ROS_INFO("MOTORS AT 75");
+        softPwmWrite(left_pwm, 75);
+        softPwmWrite(right_pwm, 75);
+    } else if(motorMsg.magnitude >= 45){
         ROS_INFO("MOTORS AT 100");
         softPwmWrite(left_pwm, 100);
         softPwmWrite(right_pwm, 100);
@@ -37,9 +41,7 @@ void motorControlClass::motor_control_callback(rcProjPkg::motor_controls_msg mot
         softPwmWrite(left_pwm, 0);
         softPwmWrite(right_pwm, 0);
     } else {
-        ROS_INFO("MOTORS AT 25");
-        softPwmWrite(left_pwm, 25);
-        softPwmWrite(right_pwm, 25);
+        ROS_INFO("ELSE");
     }
 
 // #else
