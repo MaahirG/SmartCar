@@ -348,6 +348,21 @@ _catkin_empty_exported_target/fast:
 .PHONY : _catkin_empty_exported_target/fast
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/controllerData.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/controllerData.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/controllerData.dir/rule
+
+# Convenience name for target.
+controllerData: rcProjPkg/CMakeFiles/controllerData.dir/rule
+
+.PHONY : controllerData
+
+# fast build rule for target.
+controllerData/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/controllerData.dir/build.make rcProjPkg/CMakeFiles/controllerData.dir/build
+.PHONY : controllerData/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule
@@ -632,6 +647,33 @@ motorControls/fast:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
 .PHONY : motorControls/fast
 
+src/controller.o: src/controller.cpp.o
+
+.PHONY : src/controller.o
+
+# target to build an object file
+src/controller.cpp.o:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/controllerData.dir/build.make rcProjPkg/CMakeFiles/controllerData.dir/src/controller.cpp.o
+.PHONY : src/controller.cpp.o
+
+src/controller.i: src/controller.cpp.i
+
+.PHONY : src/controller.i
+
+# target to preprocess a source file
+src/controller.cpp.i:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/controllerData.dir/build.make rcProjPkg/CMakeFiles/controllerData.dir/src/controller.cpp.i
+.PHONY : src/controller.cpp.i
+
+src/controller.s: src/controller.cpp.s
+
+.PHONY : src/controller.s
+
+# target to generate assembly for a file
+src/controller.cpp.s:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/controllerData.dir/build.make rcProjPkg/CMakeFiles/controllerData.dir/src/controller.cpp.s
+.PHONY : src/controller.cpp.s
+
 src/joystickProcessing.o: src/joystickProcessing.cpp.o
 
 .PHONY : src/joystickProcessing.o
@@ -693,6 +735,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... install/strip"
+	@echo "... install"
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_cpp"
 	@echo "... _rcProjPkg_generate_messages_check_deps_motor_controls_msg"
@@ -702,10 +745,10 @@ help:
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
-	@echo "... install"
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
 	@echo "... _catkin_empty_exported_target"
+	@echo "... controllerData"
 	@echo "... edit_cache"
 	@echo "... roscpp_generate_messages_py"
 	@echo "... rcProjPkg_gennodejs"
@@ -730,6 +773,9 @@ help:
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... rebuild_cache"
 	@echo "... motorControls"
+	@echo "... src/controller.o"
+	@echo "... src/controller.i"
+	@echo "... src/controller.s"
 	@echo "... src/joystickProcessing.o"
 	@echo "... src/joystickProcessing.i"
 	@echo "... src/joystickProcessing.s"
