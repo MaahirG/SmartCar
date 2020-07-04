@@ -1,1 +1,1 @@
-*.MakeFile linguist-language=c++
+*.makefile linguist-language=c++
