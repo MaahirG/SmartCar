@@ -72,22 +72,3 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages" TYPE DIRECTORY FILES "/home/ubuntu/SmartRCCar/devel/lib/python2.7/dist-packages/rcProjPkg")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ubuntu/SmartRCCar/build/rcProjPkg/catkin_generated/installspace/rcProjPkg.pc")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rcProjPkg/cmake" TYPE FILE FILES "/home/ubuntu/SmartRCCar/build/rcProjPkg/catkin_generated/installspace/rcProjPkg-msg-extras.cmake")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rcProjPkg/cmake" TYPE FILE FILES
-    "/home/ubuntu/SmartRCCar/build/rcProjPkg/catkin_generated/installspace/rcProjPkgConfig.cmake"
-    "/home/ubuntu/SmartRCCar/build/rcProjPkg/catkin_generated/installspace/rcProjPkgConfig-version.cmake"
-    )
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rcProjPkg" TYPE FILE FILES "/home/ubuntu/SmartRCCar/src/rcProjPkg/package.xml")
-endif()
-

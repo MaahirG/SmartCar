@@ -9,7 +9,7 @@ import struct
 class motor_controls_msg(genpy.Message):
   _md5sum = "9f60d5cf267edc4256952dd2a35a600f"
   _type = "rcProjPkg/motor_controls_msg"
-  _has_header = False #flag to mark the presence of a Header object
+  _has_header = False  # flag to mark the presence of a Header object
   _full_text = """float64 angle
 float64 magnitude"""
   __slots__ = ['angle','magnitude']
@@ -31,7 +31,7 @@ float64 magnitude"""
     """
     if args or kwds:
       super(motor_controls_msg, self).__init__(*args, **kwds)
-      #message fields cannot be None, assign default values for those that are
+      # message fields cannot be None, assign default values for those that are
       if self.angle is None:
         self.angle = 0.
       if self.magnitude is None:
@@ -70,7 +70,7 @@ float64 magnitude"""
       (_x.angle, _x.magnitude,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
-      raise genpy.DeserializationError(e) #most likely buffer underfill
+      raise genpy.DeserializationError(e)  # most likely buffer underfill
 
 
   def serialize_numpy(self, buff, numpy):
@@ -99,7 +99,7 @@ float64 magnitude"""
       (_x.angle, _x.magnitude,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
-      raise genpy.DeserializationError(e) #most likely buffer underfill
+      raise genpy.DeserializationError(e)  # most likely buffer underfill
 
 _struct_I = genpy.struct_I
 def _get_struct_I():

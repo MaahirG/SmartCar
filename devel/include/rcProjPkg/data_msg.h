@@ -35,10 +35,10 @@ struct data_msg_
 
 
 
-   typedef float _x_type;
+   typedef double _x_type;
   _x_type x;
 
-   typedef float _y_type;
+   typedef double _y_type;
   _y_type y;
 
 
@@ -128,12 +128,12 @@ struct MD5Sum< ::rcProjPkg::data_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "ff8d7d66dd3e4b731ef14a45d38888b6";
+    return "209f516d3eb691f0663e25cb750d67c1";
   }
 
   static const char* value(const ::rcProjPkg::data_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xff8d7d66dd3e4b73ULL;
-  static const uint64_t static_value2 = 0x1ef14a45d38888b6ULL;
+  static const uint64_t static_value1 = 0x209f516d3eb691f0ULL;
+  static const uint64_t static_value2 = 0x663e25cb750d67c1ULL;
 };
 
 template<class ContainerAllocator>
@@ -152,8 +152,8 @@ struct Definition< ::rcProjPkg::data_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "float32 x\n"
-"float32 y\n"
+    return "float64 x\n"
+"float64 y\n"
 ;
   }
 
@@ -193,9 +193,9 @@ struct Printer< ::rcProjPkg::data_msg_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::rcProjPkg::data_msg_<ContainerAllocator>& v)
   {
     s << indent << "x: ";
-    Printer<float>::stream(s, indent + "  ", v.x);
+    Printer<double>::stream(s, indent + "  ", v.x);
     s << indent << "y: ";
-    Printer<float>::stream(s, indent + "  ", v.y);
+    Printer<double>::stream(s, indent + "  ", v.y);
   }
 };
 

@@ -40,9 +40,9 @@ class data_msg {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type data_msg
     // Serialize message field [x]
-    bufferOffset = _serializer.float32(obj.x, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.x, buffer, bufferOffset);
     // Serialize message field [y]
-    bufferOffset = _serializer.float32(obj.y, buffer, bufferOffset);
+    bufferOffset = _serializer.float64(obj.y, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -51,14 +51,14 @@ class data_msg {
     let len;
     let data = new data_msg(null);
     // Deserialize message field [x]
-    data.x = _deserializer.float32(buffer, bufferOffset);
+    data.x = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [y]
-    data.y = _deserializer.float32(buffer, bufferOffset);
+    data.y = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 8;
+    return 16;
   }
 
   static datatype() {
@@ -68,14 +68,14 @@ class data_msg {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return 'ff8d7d66dd3e4b731ef14a45d38888b6';
+    return '209f516d3eb691f0663e25cb750d67c1';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    float32 x
-    float32 y
+    float64 x
+    float64 y
     `;
   }
 

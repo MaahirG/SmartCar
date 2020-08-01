@@ -80,17 +80,6 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target list_install_components
 list_install_components:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
@@ -101,17 +90,16 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
 
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # Special rule for the target test
 test:
@@ -134,6 +122,18 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,6 +168,96 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/vidStream.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/vidStream.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/vidStream.dir/rule
+
+# Convenience name for target.
+vidStream: rcProjPkg/CMakeFiles/vidStream.dir/rule
+
+.PHONY : vidStream
+
+# fast build rule for target.
+vidStream/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidStream.dir/build.make rcProjPkg/CMakeFiles/vidStream.dir/build
+.PHONY : vidStream/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/motorControls.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/motorControls.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/rule
+
+# Convenience name for target.
+motorControls: rcProjPkg/CMakeFiles/motorControls.dir/rule
+
+.PHONY : motorControls
+
+# fast build rule for target.
+motorControls/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
+.PHONY : motorControls/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
+
+# Convenience name for target.
+rcProjPkg_generate_messages_py: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
+
+.PHONY : rcProjPkg_generate_messages_py
+
+# fast build rule for target.
+rcProjPkg_generate_messages_py/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build
+.PHONY : rcProjPkg_generate_messages_py/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
+
+# Convenience name for target.
+rcProjPkg_gennodejs: rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
+
+.PHONY : rcProjPkg_gennodejs
+
+# fast build rule for target.
+rcProjPkg_gennodejs/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/build
+.PHONY : rcProjPkg_gennodejs/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
+
+# Convenience name for target.
+rcProjPkg_genpy: rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
+
+.PHONY : rcProjPkg_genpy
+
+# fast build rule for target.
+rcProjPkg_genpy/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/build
+.PHONY : rcProjPkg_genpy/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_py: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+
+.PHONY : std_msgs_generate_messages_py
+
+# fast build rule for target.
+std_msgs_generate_messages_py/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/build
+.PHONY : std_msgs_generate_messages_py/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
@@ -196,21 +286,6 @@ std_msgs_generate_messages_cpp: rcProjPkg/CMakeFiles/std_msgs_generate_messages_
 std_msgs_generate_messages_cpp/fast:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
 .PHONY : std_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
-
-# Convenience name for target.
-_rcProjPkg_generate_messages_check_deps_motor_controls_msg: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
-
-.PHONY : _rcProjPkg_generate_messages_check_deps_motor_controls_msg
-
-# fast build rule for target.
-_rcProjPkg_generate_messages_check_deps_motor_controls_msg/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/build.make rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/build
-.PHONY : _rcProjPkg_generate_messages_check_deps_motor_controls_msg/fast
 
 # Convenience name for target.
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_lisp.dir/rule:
@@ -318,6 +393,36 @@ std_msgs_generate_messages_lisp/fast:
 .PHONY : std_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
+
+# Convenience name for target.
+_rcProjPkg_generate_messages_check_deps_motor_controls_msg: rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/rule
+
+.PHONY : _rcProjPkg_generate_messages_check_deps_motor_controls_msg
+
+# fast build rule for target.
+_rcProjPkg_generate_messages_check_deps_motor_controls_msg/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/build.make rcProjPkg/CMakeFiles/_rcProjPkg_generate_messages_check_deps_motor_controls_msg.dir/build
+.PHONY : _rcProjPkg_generate_messages_check_deps_motor_controls_msg/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_cpp: rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : sensor_msgs_generate_messages_cpp
+
+# fast build rule for target.
+sensor_msgs_generate_messages_cpp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
+.PHONY : sensor_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
@@ -331,21 +436,6 @@ rosgraph_msgs_generate_messages_cpp: rcProjPkg/CMakeFiles/rosgraph_msgs_generate
 rosgraph_msgs_generate_messages_cpp/fast:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
 .PHONY : rosgraph_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
-
-# Convenience name for target.
-_catkin_empty_exported_target: rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
-
-.PHONY : _catkin_empty_exported_target
-
-# fast build rule for target.
-_catkin_empty_exported_target/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/build.make rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/build
-.PHONY : _catkin_empty_exported_target/fast
 
 # Convenience name for target.
 rcProjPkg/CMakeFiles/controllerData.dir/rule:
@@ -363,6 +453,51 @@ controllerData/fast:
 .PHONY : controllerData/fast
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_eus: rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
+
+.PHONY : sensor_msgs_generate_messages_eus
+
+# fast build rule for target.
+sensor_msgs_generate_messages_eus/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
+.PHONY : sensor_msgs_generate_messages_eus/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
+
+# Convenience name for target.
+_catkin_empty_exported_target: rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/rule
+
+.PHONY : _catkin_empty_exported_target
+
+# fast build rule for target.
+_catkin_empty_exported_target/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/build.make rcProjPkg/CMakeFiles/_catkin_empty_exported_target.dir/build
+.PHONY : _catkin_empty_exported_target/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_nodejs: rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : geometry_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+geometry_msgs_generate_messages_nodejs/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/build
+.PHONY : geometry_msgs_generate_messages_nodejs/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_py.dir/rule
@@ -378,19 +513,199 @@ roscpp_generate_messages_py/fast:
 .PHONY : roscpp_generate_messages_py/fast
 
 # Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
+rcProjPkg/CMakeFiles/joystickProcessing.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
 
 # Convenience name for target.
-rcProjPkg_gennodejs: rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/rule
+joystickProcessing: rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
 
-.PHONY : rcProjPkg_gennodejs
+.PHONY : joystickProcessing
 
 # fast build rule for target.
-rcProjPkg_gennodejs/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_gennodejs.dir/build
-.PHONY : rcProjPkg_gennodejs/fast
+joystickProcessing/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/joystickProcessing.dir/build.make rcProjPkg/CMakeFiles/joystickProcessing.dir/build
+.PHONY : joystickProcessing/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_nodejs: rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
+
+.PHONY : roscpp_generate_messages_nodejs
+
+# fast build rule for target.
+roscpp_generate_messages_nodejs/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/build
+.PHONY : roscpp_generate_messages_nodejs/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_eus: rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
+
+.PHONY : roscpp_generate_messages_eus
+
+# fast build rule for target.
+roscpp_generate_messages_eus/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/build
+.PHONY : roscpp_generate_messages_eus/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_eus: rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
+
+.PHONY : geometry_msgs_generate_messages_eus
+
+# fast build rule for target.
+geometry_msgs_generate_messages_eus/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_eus.dir/build
+.PHONY : geometry_msgs_generate_messages_eus/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_cpp: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+
+.PHONY : roscpp_generate_messages_cpp
+
+# fast build rule for target.
+roscpp_generate_messages_cpp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/build
+.PHONY : roscpp_generate_messages_cpp/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_nodejs: rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : sensor_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+sensor_msgs_generate_messages_nodejs/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
+.PHONY : sensor_msgs_generate_messages_nodejs/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_py: rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+
+.PHONY : sensor_msgs_generate_messages_py
+
+# fast build rule for target.
+sensor_msgs_generate_messages_py/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
+.PHONY : sensor_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_cpp: rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : geometry_msgs_generate_messages_cpp
+
+# fast build rule for target.
+geometry_msgs_generate_messages_cpp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
+.PHONY : geometry_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_lisp: rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+
+.PHONY : geometry_msgs_generate_messages_lisp
+
+# fast build rule for target.
+geometry_msgs_generate_messages_lisp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
+.PHONY : geometry_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
+
+# Convenience name for target.
+rcProjPkg_geneus: rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
+
+.PHONY : rcProjPkg_geneus
+
+# fast build rule for target.
+rcProjPkg_geneus/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/build
+.PHONY : rcProjPkg_geneus/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
+
+# Convenience name for target.
+rcProjPkg_genlisp: rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
+
+.PHONY : rcProjPkg_genlisp
+
+# fast build rule for target.
+rcProjPkg_genlisp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/build
+.PHONY : rcProjPkg_genlisp/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_py: rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+
+.PHONY : geometry_msgs_generate_messages_py
+
+# fast build rule for target.
+geometry_msgs_generate_messages_py/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
+.PHONY : geometry_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+rcProjPkg_generate_messages_nodejs: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
+
+.PHONY : rcProjPkg_generate_messages_nodejs
+
+# fast build rule for target.
+rcProjPkg_generate_messages_nodejs/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build
+.PHONY : rcProjPkg_generate_messages_nodejs/fast
 
 # Convenience name for target.
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages.dir/rule:
@@ -438,6 +753,21 @@ _rcProjPkg_generate_messages_check_deps_data_msg/fast:
 .PHONY : _rcProjPkg_generate_messages_check_deps_data_msg/fast
 
 # Convenience name for target.
+rcProjPkg/CMakeFiles/vidRead.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/vidRead.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/vidRead.dir/rule
+
+# Convenience name for target.
+vidRead: rcProjPkg/CMakeFiles/vidRead.dir/rule
+
+.PHONY : vidRead
+
+# fast build rule for target.
+vidRead/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidRead.dir/build.make rcProjPkg/CMakeFiles/vidRead.dir/build
+.PHONY : vidRead/fast
+
+# Convenience name for target.
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/rule:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/rule
 .PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_cpp.dir/rule
@@ -468,49 +798,19 @@ rcProjPkg_gencpp/fast:
 .PHONY : rcProjPkg_gencpp/fast
 
 # Convenience name for target.
-rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
+rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+.PHONY : rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
-roscpp_generate_messages_nodejs: rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
+sensor_msgs_generate_messages_lisp: rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
 
-.PHONY : roscpp_generate_messages_nodejs
+.PHONY : sensor_msgs_generate_messages_lisp
 
 # fast build rule for target.
-roscpp_generate_messages_nodejs/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_nodejs.dir/build
-.PHONY : roscpp_generate_messages_nodejs/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_eus: rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-
-.PHONY : roscpp_generate_messages_eus
-
-# fast build rule for target.
-roscpp_generate_messages_eus/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_eus.dir/build
-.PHONY : roscpp_generate_messages_eus/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/joystickProcessing.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
-
-# Convenience name for target.
-joystickProcessing: rcProjPkg/CMakeFiles/joystickProcessing.dir/rule
-
-.PHONY : joystickProcessing
-
-# fast build rule for target.
-joystickProcessing/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/joystickProcessing.dir/build.make rcProjPkg/CMakeFiles/joystickProcessing.dir/build
-.PHONY : joystickProcessing/fast
+sensor_msgs_generate_messages_lisp/fast:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make rcProjPkg/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
+.PHONY : sensor_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/rule:
@@ -526,126 +826,6 @@ rcProjPkg_generate_messages_eus: rcProjPkg/CMakeFiles/rcProjPkg_generate_message
 rcProjPkg_generate_messages_eus/fast:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_eus.dir/build
 .PHONY : rcProjPkg_generate_messages_eus/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
-
-# Convenience name for target.
-rcProjPkg_geneus: rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/rule
-
-.PHONY : rcProjPkg_geneus
-
-# fast build rule for target.
-rcProjPkg_geneus/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_geneus.dir/build
-.PHONY : rcProjPkg_geneus/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
-
-# Convenience name for target.
-rcProjPkg_genlisp: rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/rule
-
-.PHONY : rcProjPkg_genlisp
-
-# fast build rule for target.
-rcProjPkg_genlisp/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_genlisp.dir/build
-.PHONY : rcProjPkg_genlisp/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-rcProjPkg_generate_messages_nodejs: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/rule
-
-.PHONY : rcProjPkg_generate_messages_nodejs
-
-# fast build rule for target.
-rcProjPkg_generate_messages_nodejs/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_nodejs.dir/build
-.PHONY : rcProjPkg_generate_messages_nodejs/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
-
-# Convenience name for target.
-rcProjPkg_generate_messages_py: rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/rule
-
-.PHONY : rcProjPkg_generate_messages_py
-
-# fast build rule for target.
-rcProjPkg_generate_messages_py/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_generate_messages_py.dir/build
-.PHONY : rcProjPkg_generate_messages_py/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_py: rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/build.make rcProjPkg/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
-
-# Convenience name for target.
-rcProjPkg_genpy: rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/rule
-
-.PHONY : rcProjPkg_genpy
-
-# fast build rule for target.
-rcProjPkg_genpy/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/build.make rcProjPkg/CMakeFiles/rcProjPkg_genpy.dir/build
-.PHONY : rcProjPkg_genpy/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_cpp: rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-.PHONY : roscpp_generate_messages_cpp
-
-# fast build rule for target.
-roscpp_generate_messages_cpp/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make rcProjPkg/CMakeFiles/roscpp_generate_messages_cpp.dir/build
-.PHONY : roscpp_generate_messages_cpp/fast
-
-# Convenience name for target.
-rcProjPkg/CMakeFiles/motorControls.dir/rule:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f CMakeFiles/Makefile2 rcProjPkg/CMakeFiles/motorControls.dir/rule
-.PHONY : rcProjPkg/CMakeFiles/motorControls.dir/rule
-
-# Convenience name for target.
-motorControls: rcProjPkg/CMakeFiles/motorControls.dir/rule
-
-.PHONY : motorControls
-
-# fast build rule for target.
-motorControls/fast:
-	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/build
-.PHONY : motorControls/fast
 
 src/controller.o: src/controller.cpp.o
 
@@ -728,6 +908,60 @@ src/motorControls.cpp.s:
 	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/motorControls.dir/build.make rcProjPkg/CMakeFiles/motorControls.dir/src/motorControls.cpp.s
 .PHONY : src/motorControls.cpp.s
 
+src/vid_receiver.o: src/vid_receiver.cpp.o
+
+.PHONY : src/vid_receiver.o
+
+# target to build an object file
+src/vid_receiver.cpp.o:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidRead.dir/build.make rcProjPkg/CMakeFiles/vidRead.dir/src/vid_receiver.cpp.o
+.PHONY : src/vid_receiver.cpp.o
+
+src/vid_receiver.i: src/vid_receiver.cpp.i
+
+.PHONY : src/vid_receiver.i
+
+# target to preprocess a source file
+src/vid_receiver.cpp.i:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidRead.dir/build.make rcProjPkg/CMakeFiles/vidRead.dir/src/vid_receiver.cpp.i
+.PHONY : src/vid_receiver.cpp.i
+
+src/vid_receiver.s: src/vid_receiver.cpp.s
+
+.PHONY : src/vid_receiver.s
+
+# target to generate assembly for a file
+src/vid_receiver.cpp.s:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidRead.dir/build.make rcProjPkg/CMakeFiles/vidRead.dir/src/vid_receiver.cpp.s
+.PHONY : src/vid_receiver.cpp.s
+
+src/video_stream.o: src/video_stream.cpp.o
+
+.PHONY : src/video_stream.o
+
+# target to build an object file
+src/video_stream.cpp.o:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidStream.dir/build.make rcProjPkg/CMakeFiles/vidStream.dir/src/video_stream.cpp.o
+.PHONY : src/video_stream.cpp.o
+
+src/video_stream.i: src/video_stream.cpp.i
+
+.PHONY : src/video_stream.i
+
+# target to preprocess a source file
+src/video_stream.cpp.i:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidStream.dir/build.make rcProjPkg/CMakeFiles/vidStream.dir/src/video_stream.cpp.i
+.PHONY : src/video_stream.cpp.i
+
+src/video_stream.s: src/video_stream.cpp.s
+
+.PHONY : src/video_stream.s
+
+# target to generate assembly for a file
+src/video_stream.cpp.s:
+	cd /home/ubuntu/SmartRCCar/build && $(MAKE) -f rcProjPkg/CMakeFiles/vidStream.dir/build.make rcProjPkg/CMakeFiles/vidStream.dir/src/video_stream.cpp.s
+.PHONY : src/video_stream.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -736,9 +970,17 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install"
+	@echo "... list_install_components"
+	@echo "... edit_cache"
+	@echo "... test"
+	@echo "... vidStream"
+	@echo "... motorControls"
+	@echo "... rcProjPkg_generate_messages_py"
+	@echo "... rcProjPkg_gennodejs"
+	@echo "... rcProjPkg_genpy"
+	@echo "... std_msgs_generate_messages_py"
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... _rcProjPkg_generate_messages_check_deps_motor_controls_msg"
 	@echo "... rcProjPkg_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
@@ -746,33 +988,37 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... std_msgs_generate_messages_lisp"
+	@echo "... _rcProjPkg_generate_messages_check_deps_motor_controls_msg"
+	@echo "... sensor_msgs_generate_messages_cpp"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
-	@echo "... _catkin_empty_exported_target"
 	@echo "... controllerData"
-	@echo "... edit_cache"
+	@echo "... sensor_msgs_generate_messages_eus"
+	@echo "... _catkin_empty_exported_target"
+	@echo "... geometry_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_py"
-	@echo "... rcProjPkg_gennodejs"
-	@echo "... list_install_components"
+	@echo "... joystickProcessing"
+	@echo "... roscpp_generate_messages_nodejs"
+	@echo "... roscpp_generate_messages_eus"
+	@echo "... geometry_msgs_generate_messages_eus"
+	@echo "... rebuild_cache"
+	@echo "... roscpp_generate_messages_cpp"
+	@echo "... sensor_msgs_generate_messages_nodejs"
+	@echo "... sensor_msgs_generate_messages_py"
+	@echo "... geometry_msgs_generate_messages_cpp"
+	@echo "... geometry_msgs_generate_messages_lisp"
+	@echo "... rcProjPkg_geneus"
+	@echo "... rcProjPkg_genlisp"
+	@echo "... geometry_msgs_generate_messages_py"
+	@echo "... rcProjPkg_generate_messages_nodejs"
 	@echo "... rcProjPkg_generate_messages"
 	@echo "... roscpp_generate_messages_lisp"
 	@echo "... _rcProjPkg_generate_messages_check_deps_data_msg"
+	@echo "... vidRead"
 	@echo "... rcProjPkg_generate_messages_cpp"
 	@echo "... rcProjPkg_gencpp"
-	@echo "... roscpp_generate_messages_nodejs"
-	@echo "... roscpp_generate_messages_eus"
-	@echo "... joystickProcessing"
 	@echo "... install/local"
+	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... rcProjPkg_generate_messages_eus"
-	@echo "... rcProjPkg_geneus"
-	@echo "... rcProjPkg_genlisp"
-	@echo "... test"
-	@echo "... rcProjPkg_generate_messages_nodejs"
-	@echo "... rcProjPkg_generate_messages_py"
-	@echo "... std_msgs_generate_messages_py"
-	@echo "... rcProjPkg_genpy"
-	@echo "... roscpp_generate_messages_cpp"
-	@echo "... rebuild_cache"
-	@echo "... motorControls"
 	@echo "... src/controller.o"
 	@echo "... src/controller.i"
 	@echo "... src/controller.s"
@@ -782,6 +1028,12 @@ help:
 	@echo "... src/motorControls.o"
 	@echo "... src/motorControls.i"
 	@echo "... src/motorControls.s"
+	@echo "... src/vid_receiver.o"
+	@echo "... src/vid_receiver.i"
+	@echo "... src/vid_receiver.s"
+	@echo "... src/video_stream.o"
+	@echo "... src/video_stream.i"
+	@echo "... src/video_stream.s"
 .PHONY : help
 
 

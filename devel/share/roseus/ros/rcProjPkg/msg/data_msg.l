@@ -35,40 +35,40 @@
   (:serialization-length
    ()
    (+
-    ;; float32 _x
-    4
-    ;; float32 _y
-    4
+    ;; float64 _x
+    8
+    ;; float64 _y
+    8
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; float32 _x
-       (sys::poke _x (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
-     ;; float32 _y
-       (sys::poke _y (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; float64 _x
+       (sys::poke _x (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _y
+       (sys::poke _y (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; float32 _x
-     (setq _x (sys::peek buf ptr- :float)) (incf ptr- 4)
-   ;; float32 _y
-     (setq _y (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; float64 _x
+     (setq _x (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _y
+     (setq _y (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get rcProjPkg::data_msg :md5sum-) "ff8d7d66dd3e4b731ef14a45d38888b6")
+(setf (get rcProjPkg::data_msg :md5sum-) "209f516d3eb691f0663e25cb750d67c1")
 (setf (get rcProjPkg::data_msg :datatype-) "rcProjPkg/data_msg")
 (setf (get rcProjPkg::data_msg :definition-)
-      "float32 x
-float32 y
+      "float64 x
+float64 y
 ")
 
 
 
-(provide :rcProjPkg/data_msg "ff8d7d66dd3e4b731ef14a45d38888b6")
+(provide :rcProjPkg/data_msg "209f516d3eb691f0663e25cb750d67c1")
 
 
