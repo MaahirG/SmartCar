@@ -5,6 +5,9 @@
 ### Prereqs
 * ROS
 * OpenCV
+* CMake
+* Host Computer and Mobile Robot Computer
+* USB Controller
 
 ### How to Use:
 ```sh
