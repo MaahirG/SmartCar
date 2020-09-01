@@ -12,3 +12,16 @@ Telerobotics simplified - The system controls a mobile robot without range barri
 * [https://www.marketwatch.com/press-release/emerging-role-of-teleoperation-telerobotics-in-industry-40-2020-2025-analysis-2020-04-23?mod=mw_more_headlines&tesla=y]
 * [https://www.engineering.com/AdvancedManufacturing/ArticleID/13099/IIoT-and-Industry-40-to-Create-Growth-in-Telerobotics-in-Manufacturing.aspx]
 * [https://ieeexplore.ieee.org/document/8075288]
+
+### Prereqs
+```sh
+* ROS
+* OpenCV
+```
+### How to Use:
+```sh
+git clone
+cd SmartCar
+catkin build
+
+```
