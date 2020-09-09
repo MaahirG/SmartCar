@@ -2,16 +2,16 @@
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
+### Navigate the Repo
+#### All autonomous features: A* path planning, realtime fast detection with CUDA wrappers and TensorRT, mapping visualization and transformations are found in SmartCar/autonomous </br>
+#### All telerobotics code is found in SmartCar/src/rcProjPkg/src (header files are in SmartCar/src/rcProjPkg/include/rcProjPkg) </br>
+
 ### Prereqs
 * ROS
 * OpenCV
 * CMake
 * Host Computer and Mobile Robot Computer
 * USB Controller
-
-### Navigate the Repo
-All autonomous features: A* path planning, realtime fast detection with CUDA wrappers and TensorRT, mapping visualization and transformations are found in SmartCar/autonomous
-All telerobotics code is found in SmartCar/src/rcProjPkg/src (header files are in SmartCar/src/rcProjPkg/include/rcProjPkg)
 
 ### How to Use:
 ```sh
