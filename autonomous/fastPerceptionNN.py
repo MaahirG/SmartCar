@@ -73,6 +73,3 @@ while True:
 # WITHOUT THIS, GST CAMERA AND OPENCV DISPLAY MAY NOT OPEN AGAIN!
 cv2.destroyAllWindows()
 
-Attachments area
-Preview YouTube video Real-Time Object Detection in 10 Lines of Python Code on Jetson Nano
-
