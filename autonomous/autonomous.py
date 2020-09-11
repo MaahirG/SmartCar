@@ -1,10 +1,13 @@
 # MINI TESLA CODE
-
-import math
+# BSPLINE: https://github.com/kawache/Python-B-spline-examples, https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.BSpline.html
 import pygame
 import math
 from queue import PriorityQueue
-import time 
+import time
+import numpy as np
+import scipy.interpolate as interpolate
+import matplotlib.pyplot as plt
+
 RED = (255, 0, 0) # Explored
 GREEN = (0, 255, 0)
 BLUE = (0, 255, 0)
@@ -131,15 +134,21 @@ class Node:
 	def __lt__(self, other):
 		return False
 
+SMOOTHX = []
+SMOOTHY = []
 
-def reconstruct_path(came_from, current, draw):
+def reconstruct_path(came_from, current, draw, xList, yList):
 	while current in came_from:
+		p1,p2 = current.get_pos()
+		xList.append(p1)
+		yList.append(p2)
 		current = came_from[current]
 		current.make_path()
 		draw()
+	return xList, yList
 
 
-def algorithm(draw, grid, start, end):
+def algorithm(draw, grid, start, end, xList, yList):
 	count = 0
 	current_set = PriorityQueue()		# reliant on heap sort (min sort), insert at the end of tree and propagate up, can only access the root. Delete by swapping root with end and then heapify
 	current_set.put((0, count, start)) # fscore, count for tiebreaking, node
@@ -167,9 +176,9 @@ def algorithm(draw, grid, start, end):
 		current_set_tracker.remove(current_node)
 
 		if current_node == end:
-			reconstruct_path(came_from, end, draw)
+			xList, yList = reconstruct_path(came_from, end, draw, xList, yList)
 			end.make_end()
-			return True
+			return xList, yList
 
 		for neighbor in current_node.neighbors:
 			temp_g_score = g_score[current_node] + 1
@@ -189,7 +198,7 @@ def algorithm(draw, grid, start, end):
 		if current_node != start:
 			current_node.make_TraversedNode()
 
-	return False
+	return xList, yList
 
 def movement(direction, endNode, win, grid, rows, width): # moving the car vertically so it's always 41x41, left = 0, right = 1
 	boundaryKeyList = []
@@ -276,10 +285,13 @@ def boundaryCreator(diameter, x, y, cleanup, win, grid, rows, width):
 	draw(win, grid, rows, width)	
 	return
 
-def h(p1, p2):
+def h(p1, p2): # p1 and p2 are return values of get_pos()
 	x1, y1 = p1
 	x2, y2 = p2
-	return abs(x1 - x2) + abs(y1 - y2)
+	diffX = abs(x1 - x2)
+	diffY = abs(y1 - y2)
+	# return diffX + diffY # Manhattan
+	return math.sqrt(diffX**2 + diffY**2)	# Euclidean
 
 # Fill up grid with nodes
 def populate_grid(numRows, gridWidth):
@@ -340,23 +352,23 @@ pygame.display.set_caption("Path Planning")
 
 def main(win, width, ROWS):
 	midCoords = math.ceil(ROWS/2) - 1 # the middle block: ceil(NUMROWS/2) - 1 because 0th index
-
 	grid = populate_grid(ROWS, width)
 	
-	endRow = 6
-	endCol = 24
+	endRow = 1
+	endCol = 28
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
 
 	start = grid[midCoords][midCoords]
 	end = grid[endRow][endCol]
-	# grid[ROWS-3][0].set_state(OBSTACLESTATE)
+
+	xList = []
+	yList = []
 
 	temp = []
 	for row in grid:
 		for node in row:
 			temp.append(node.state)
-		#print(temp)
 		temp = []
 	
 	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
@@ -364,6 +376,9 @@ def main(win, width, ROWS):
 
 	run = True
 	while run:
+		if len(xList) > 0:
+			break
+
 		if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
 			print("YOU CRASHED.")
 		grid[midCoords][midCoords].make_start()
@@ -391,12 +406,41 @@ def main(win, width, ROWS):
 					for node in row:
 						node.update_neighbors(grid)
 				
-				algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
-
+				xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
 
 				if event.key == pygame.K_c:
 					grid = populate_grid(ROWS, width)
-				
+
+				x = np.array(xList)
+				y = np.array(yList)
+
+				xe, ye = end.get_pos()
+				xs, ys = start.get_pos()
+				dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
+
+				if dist < 15:
+					thresh = (int)(ROWS*0.2) # two many points to try and map to the path with not much movement means choppy turns - so restrict it.
+				else:
+					thresh = (int)(ROWS*0.3)
+
+				tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
+				u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
+				out = interpolate.splev(u,tck)					
+				for i in range(len(out[0])):
+					print(out[0][i], out[1][i])
+				plt.figure()
+				plt.plot(x, y, 'ro', out[0], out[1], 'b')
+				plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
+				plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
+				plt.title('B-Spline Interpolation')
+				xList = []
+				yList = []
+				plt.show(block=False)
+				plt.pause(0.3)
+				plt.close()
+
+
+	# REMEMBER TO CLEAR LISTX AND LISTY AFTER ALGORITHM RUNS
 	pygame.quit()
 
 main(WIN, SCREENWIDTH, NUMROWS)
