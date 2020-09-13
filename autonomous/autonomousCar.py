@@ -416,7 +416,7 @@ def main(win, width, ROWS):
 						    node.update_neighbors(grid)
 				
                     algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
-
+		 
 		# NEED TO MAKE VIDEO CAPTURE PARALLEL - CONTINUE WHEN ALGORITHM IS RUNNING? OR IS IT FAST ENOUGH TO NOT BE AN ISSUE
 		fps = net.GetNetworkFPS()
 
@@ -433,6 +433,8 @@ def main(win, width, ROWS):
 
         # new updated map, localized properly --> USED ONLY TO GET STARTING DIRECTION, AFTER THIS FOLLOW THE SMOOTHED PATH
 		# WILL THE MOVEMENT FUNCTION WORK NOW THAT WE'RE FOLLOWING A SMOOTHED PATH? CAN YOU STILL SIGNIFY THAT A TILE HAS BEEN TRAVERSED
+		# Can still use the came_from array to trace back and conduct the movement() while the actual car is following the smooth path
+		# Can correlate the came_from array to the 'out' array from the spline interpolation process 
         if grid[midCoords+1][midCoords].get_state() == EGOPATH:
             # CarGoingLeft, Controls move Left
             end = movement('left', end, win, grid, ROWS, width)				
@@ -446,6 +448,8 @@ def main(win, width, ROWS):
             # CarGoingStraight, Controls move Straight
 		    end = movement('straight', end, win, grid, ROWS, width)
 
+		# first decide on direction of travel, then map the differential turn
+		# map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
 
 
 		for event in pygame.event.get():

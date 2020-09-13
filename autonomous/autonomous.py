@@ -7,6 +7,10 @@ import time
 import numpy as np
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
+# import jetson.inference as ji
+# import jetson.utils
+# import numpy as np
+# import cv2
 
 RED = (255, 0, 0) # Explored
 GREEN = (0, 255, 0)
@@ -351,11 +355,12 @@ pygame.display.set_caption("Path Planning")
 
 
 def main(win, width, ROWS):
+	print("hello")
 	midCoords = math.ceil(ROWS/2) - 1 # the middle block: ceil(NUMROWS/2) - 1 because 0th index
 	grid = populate_grid(ROWS, width)
 	
 	endRow = 1
-	endCol = 28
+	endCol = 36
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
 
@@ -370,26 +375,60 @@ def main(win, width, ROWS):
 		for node in row:
 			temp.append(node.state)
 		temp = []
-	
+
+	truck = [13,28,5] # dx, dy, size, detection num 
+	car = [11,15,7]
+	# each detection is relative to the previous detection
+
+	# OPENCV DISPLAY
+	# net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
+	# camera = jetson.utils.gstCamera(1280, 720, "0")
+	# cv2.destroyAllWindows()
+
 	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
-
+	
+	numDetections = 0
 	run = True
 	while run:
-		if len(xList) > 0:
-			break
-
+		
 		if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
 			print("YOU CRASHED.")
-		grid[midCoords][midCoords].make_start()
 
+		grid[midCoords][midCoords].make_start()
 		draw(win, grid, ROWS, width)
+		
+        # img, width, height = camera.CaptureRGBA(zeroCopy=True)
+		# detections = net.Detect(img, width, height)
+		# if len(detections) > 0:
+		# 	for detection in detections:
+		# 		id = detection.ClassID
+		# 		print("ClassID:", id, "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
+        #         if id == 8 or id == 6 or id ==3:
+        #             print("DETECTED A VEHICLE")
+        #             if numDetections = 0:
+        #                 boundaryCreator(truck[2], truck[0], truck[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+        #                 numDetections += 1
+        #             elif numDetections = 1:
+        #                 boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+        #                 numDetections += 1
+        #             else
+        #                 print("Already detected!")
+        #                 break
+                    
+        #             for row in grid:
+		# 			    for node in row:
+		# 				    node.update_neighbors(grid)
+					
+		# 			xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
+
+		 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				run = False
 			
-			if event.type == pygame.KEYDOWN:
-			# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
+			# if some detection - run algorithm
+			if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
 				if event.key == pygame.K_UP:
 					end = movement('right', end, win, grid, ROWS, width)
 
@@ -408,9 +447,11 @@ def main(win, width, ROWS):
 				
 				xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
 
-				if event.key == pygame.K_c:
-					grid = populate_grid(ROWS, width)
+				# if event.key == pygame.K_c:
+				# 	grid = populate_grid(ROWS, width)
 
+
+				# ONLY IF ALGORITHM RUNS --> MEANING THERE WAS A NEW BOUNDARY DETECTION: RUN SPLINE SMOOTHED INTERPOLATED PATH
 				x = np.array(xList)
 				y = np.array(yList)
 
@@ -419,15 +460,31 @@ def main(win, width, ROWS):
 				dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
 
 				if dist < 15:
-					thresh = (int)(ROWS*0.2) # two many points to try and map to the path with not much movement means choppy turns - so restrict it.
+					thresh = (int)(ROWS*0.2) # too many points to try and map to the path with not much movement means choppy turns - so restrict it.
 				else:
 					thresh = (int)(ROWS*0.3)
 
 				tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
 				u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
-				out = interpolate.splev(u,tck)					
+				out = interpolate.splev(u,tck) # 'out' is the interpolated array of new x,y positions
+
+				localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
+
+				for i in range(len(out[0])-1):	# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
+					xDiff = out[0][i]-out[0][i+1]
+					yDiff = out[1][i]-out[1][i+1]
+					mag = math.sqrt(xDiff**2 + yDiff**2)
+					angle = (int)((math.atan2(yDiff,xDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
+					tempx = round(xDiff)	# if negative, rows would be increasing --> car is going left --> call movement(left)
+					tempy = round(yDiff)	# if negative, cols would be increasing --> car is going back --> call movement(back)
+					localChangeList.append((tempx,tempy,mag,angle))
+
 				for i in range(len(out[0])):
-					print(out[0][i], out[1][i])
+					print("X:ROW:", out[0][i], "Y:COL:", out[1][i])
+					if i < len(out[0])-1:
+						print("X", localChangeList[i][0], "Y", localChangeList[i][1], "MAG", localChangeList[i][2], "ANGLE", localChangeList[i][3])
+
+				# visualize and clear lists containing path for next iteration
 				plt.figure()
 				plt.plot(x, y, 'ro', out[0], out[1], 'b')
 				plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
@@ -436,9 +493,21 @@ def main(win, width, ROWS):
 				xList = []
 				yList = []
 				plt.show(block=False)
-				plt.pause(0.3)
+				plt.pause(15)
 				plt.close()
 
+				
+
+				# Goal: movement() needs to align with spline path. (DONE)
+				# (int)spline[0][x] - spline[1][x] = how much movement() should occur, 
+				# same time: (int)spline[0][y] - spline[1][y] = how much movement() should occur, 
+				
+				# only way you get a new xList or yList is if a new boundary is detected.
+
+				# How the car follow the path:
+				# first decide on direction of travel, then map the differential turn
+				# map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
+				# map the magnitude of the pytahgorean val of two consecutive spline points to the time the motors are moving at said differential
 
 	# REMEMBER TO CLEAR LISTX AND LISTY AFTER ALGORITHM RUNS
 	pygame.quit()
