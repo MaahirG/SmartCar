@@ -536,13 +536,14 @@ def main(win, width, ROWS):
 		colDiff = infoTuple[1]
 		mag = math.sqrt(rowDiff**2 + colDiff**2)
 		angle = (int)((math.atan2(colDiff,rowDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
-		
+
+	# TROUBLESHOOT PRINT STATEMENTS:	
 		# for i in range(len(localChangeList)):
 		# 	print("COL", localChangeList[i][0], "ROW", localChangeList[i][1])
-		iteration = len(xList)-1
-		print(xList[iteration], yList[iteration])
-		print("MINUS 1", xList[iteration-1], yList[iteration-1])
-		print(xList[iteration]-xList[iteration-1])
+		# iteration = len(xList)-1
+		# print(xList[iteration], yList[iteration])
+		# print("MINUS 1", xList[iteration-1], yList[iteration-1])
+		# print(xList[iteration]-xList[iteration-1])
 		# break
 		# print("ROWDIFF", rowDiff, "COLDIFF:" , colDiff)
 			
@@ -552,91 +553,53 @@ def main(win, width, ROWS):
 		# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
 		# ex. max()--> 2.392, if max was col --> look in yList, else look in xList, pop() and subtract till max is almost reached
 		# if you subtract and pop one more time, will it be a greater distance from 0 than if you left it? --> if yes, leave it--> that's where end is.
-		
-		if abs(rowDiff) >= abs(colDiff):
-			shotCaller = abs(rowDiff)
-			checkRow = True
-		else:
-			shotCaller = abs(colDiff)
-			checkRow = False
-		
-		dir = ''
-		iteration = len(xList)-1 # would give the first came_from[] values
-		print("ITERATION", iteration)
-		print("SHOTCALLER", checkRow)
+
 		# xList[0] has the row position of start tile
 
 		# difference between consecutive xList vals
 		# goal: does shotcaller benefit from adding another xList val or does it get further awawy from 0?
 		
-		if checkRow:
-			nextAddition = (abs(xList[iteration]-xList[iteration-1]))
+
+		# abs(shotCaller - nextAddition) < shotCaller; is closer to 0 than just shotCaller 3-1 = 2 vs 3, 1-6 = -5 --> 5 vs 1
+		iteration = len(xList)-1 # would give the first came_from[] values
+		nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1])
+		shotCaller = abs(rowDiff) + abs(colDiff)
+		dir = ''
+		
+		while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
+			print(shotCaller)
+			shotCaller -= nextAddition
+			print(nextAddition)
+			nodeX, nodeY = xList[iteration], yList[iteration]
+			print(nodeX,nodeY)
+			nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
 			
-			# abs(shotCaller - nextAddition) < shotCaller; is closer to 0 than just shotCaller 3-1 = 2 vs 3, 1-6 = -5 --> 5 vs 1
+			if nextNodeX-nodeX > 0:
+				dir = 'left'
+			elif nextNodeX-nodeX < 0:
+				dir = 'right'
+			elif nextNodeY-nodeY > 0:
+				dir = 'back'
+			elif nextNodeY-nodeY < 0:
+				dir = 'straight'
+			else:
+				dir = '' 
 			
-			while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
-				nodeX, nodeY = xList[iteration], yList[iteration]
-				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
-				if nextNodeX-nodeX > 0:
-					dir = 'left'
-				elif nextNodeX-nodeX < 0:
-					dir = 'right'
-				elif nextNodeY-nodeY > 0:
-					dir = 'back'
-				elif nextNodeY-nodeY < 0:
-					dir = 'straight'
-				else:
-					dir = '' 
-				
-				# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
-				end = movement(dir, end, win, grid, ROWS, width, 1)
+			# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
+			end = movement(dir, end, win, grid, ROWS, width, 1)
+			
+			xList.pop()
+			yList.pop()
 
-				xList.pop()
-				yList.pop()
-				iteration = iteration-1
-				if iteration > 0:
-					nextAddition = (abs(xList[iteration]-xList[iteration-1]))
-
-			print("INSIDE CHECKROW", xList)
-			print("INSIDE CHECKROW", yList)
-
-		else: #ONLY DIFFERENCE is yList instead of xList for columns being the shotcaller (bigger val)
-			nextAddition = (abs(yList[iteration]-yList[iteration-1]))
-			while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
-				nodeX, nodeY = xList[iteration], yList[iteration]
-				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
-				
-				if nextNodeX-nodeX > 0:
-					dir = 'left'
-				elif nextNodeX-nodeX < 0:
-					dir = 'right'
-				elif nextNodeY-nodeY > 0:
-					dir = 'back'
-				elif nextNodeY-nodeY < 0:
-					dir = 'straight'
-				else:
-					dir = '' 
-				
-				# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
-				end = movement(dir, end, win, grid, ROWS, width, 1)
-				yList.pop()
-				xList.pop()	# need to pop both of them since they make up one point.
-				iteration -= 1
-				if iteration > 0:
-					nextAddition = (abs(xList[iteration]-xList[iteration-1]))
-
-			print("INSIDE CHECKCOL", xList)
-			print("INSIDE CHECKCOL", yList)
-
+			iteration = iteration-1
+			if iteration > 0:
+				nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
+			time.sleep(2)
 
 		# print("ROW:", out[0][mainIter], "COL:", out[1][mainIter])
 		# print(mag, angle, "\n")
-
-
+		print("OUT OF LOOP")
 		# Do this only everytime car moves one full magnitude - magnitude is between n number of spline points and so is out[0] gets done
-
-		time.sleep(1)
-		
 		mainIter -= 1
 		localChangeList.pop()
 
