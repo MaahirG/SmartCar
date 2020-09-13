@@ -66,7 +66,11 @@ class Node:
 	def get_state(self):
 		return self.state
 		
-	def set_state(self, state):
+	def set_state(self, state, row, col):
+		# if out of bounds (especially probable for extra radius of boundaries when moving, do nothing)
+		if row > self.total_rows-1 or row < 0 or col > self.total_rows-1 or col < 0:
+			return 
+
 		if state == OBSTACLESTATE:
 			color = BLACK
 		elif state == EMPTYSTATE:
@@ -219,7 +223,7 @@ def movement(direction, endNode, win, grid, rows, width, tiles): # moving the ca
 			if tempState == EGOPATH or tempState == EMPTYSTATE or tempState == ENDSTATE:
 				if tempState == ENDSTATE:
 					endRow, endCol = endNode.get_pos()
-				grid[row][col].set_state(UNEXPLOREDSTATE)
+				grid[row][col].set_state(UNEXPLOREDSTATE, row, col)
 
 	# not iterating through dictionary because dict values change in boundaryCreator
 	for node in boundaryKeyList: # list of boundary nodes with non updated coordinates
@@ -229,24 +233,34 @@ def movement(direction, endNode, win, grid, rows, width, tiles): # moving the ca
 		BOUNDARYCENTRES.pop(node)
 		if direction == 'right': 		# if ego moves right (upscreen) boundaries go left (downscreen)
 			row += tiles
-		if direction == 'straight':
+		elif direction == 'straight':
 			col += tiles
-		if direction == 'left': 
+		elif direction == 'left': 
 			row -= tiles
-		if direction == 'back':
+		elif direction == 'back':
 			col -= tiles
 		boundaryCreator(size, row, col, 0, win, grid, rows, width) # recreates the boundary - and adds to BoundaryCentreTracking dictionary
 	
 	if direction == 'right':
-		endRow += tiles
-	if direction == 'straight':
+		endRow += tiles		# if the car is going right, rows need to increase (end point comes downwards visually on the map)
+	elif direction == 'straight':
 		endCol += tiles
-	if direction == 'left': 
+	elif direction == 'left': 
 		endRow -= tiles
-	if direction == 'back':
+	elif direction == 'back':
 		endCol -= tiles
 
-	print(endCol,endRow)
+	# for i in range(1, tiles):
+	# 	if direction == 'right':
+	# 		grid[endRow-i][endCol].make_path()
+	# 	if direction == 'straight':
+	# 		grid[endRow][endCol-i].make_path()
+	# 	if direction == 'left': 
+	# 		grid[endRow+i][endCol].make_path()
+	# 	if direction == 'back':
+	# 		grid[endRow][endCol+i].make_path()
+	# draw(win, grid, rows, width)
+
 	# updated coords reset end point
 	endNodeUpdated = grid[endRow][endCol]
 	endNodeUpdated.make_end()
@@ -255,7 +269,10 @@ def movement(direction, endNode, win, grid, rows, width, tiles): # moving the ca
 
 # doesn't check edge cases, out of bounds etc
 def boundaryCreator(diameter, x, y, cleanup, win, grid, rows, width):
-	if cleanup:
+	# if the middle goes out of range, don't worry about the boundary anymore ~ assumption that no boundary just from the bottom and so near the end will have an effect on the path.
+	if x > rows-1 or x < 0 or y > rows-1 or y < 0:
+		return
+	elif cleanup:
 		state = UNEXPLOREDSTATE
 	else: 
 		state = OBSTACLESTATE
@@ -271,25 +288,25 @@ def boundaryCreator(diameter, x, y, cleanup, win, grid, rows, width):
 
 	indexStoringList = []
 	for index,i in enumerate(range(start,half+1)):
-		grid[x+i][y].set_state(state)
+		grid[x+i][y].set_state(state, x+i, y)
 		if i<0:
 			start2 = 0-index # index = 1: -1 start, +1 end
 			end = 0+index
 			indexStoringList.append(index)
 			for j in range(start2,end+1): # if index is 0, none, index = 1, go up 1 down 1, index 
-				grid[x+i][y+j].set_state(state)
+				grid[x+i][y+j].set_state(state, x+i, y+j)
 		elif i > 0:
 			startDescent = 0-indexStoringList[len(indexStoringList)-1]
 			endDescent = 0 + indexStoringList[len(indexStoringList)-1]
 			indexStoringList.pop()
 			for k in range(startDescent,endDescent+1):
-				grid[x+i][y+k].set_state(state)
+				grid[x+i][y+k].set_state(state, x+i, y+k)
 		else: 
 			# print("You are at the middle!")
 			pass
 		
 		# don't need loops twice for the vertical line of the star, above covers it 
-		grid[x][y+i].set_state(state)
+		grid[x][y+i].set_state(state, x, y+i)
 		
 	draw(win, grid, rows, width)	
 	return
@@ -394,8 +411,8 @@ def main(win, width, ROWS):
 	# camera = jetson.utils.gstCamera(1280, 720, "0")
 	# cv2.destroyAllWindows()
 
-	# boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-	# boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
+	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
 	
 	localChangeList = []
 	numDetections = 0
@@ -507,9 +524,7 @@ def main(win, width, ROWS):
 		
 		if loopIter == 0:
 			continue
-		
-		# # movement(whatever)
-		if len(localChangeList) == 0:
+		elif len(localChangeList) == 0:
 			print("You made it!")
 			break
 		
@@ -546,13 +561,13 @@ def main(win, width, ROWS):
 		end = movement(longitudinalDir, end, win, grid, ROWS, width, tempCol)
 		end = movement(lateralDir, end, win, grid, ROWS, width, tempRow)
 
-		time.sleep(0.3)
+		time.sleep(1)
 		
 		mainIter -= 1
 		localChangeList.pop()
 
 
-
+		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!!
 
 		# Goal: movement() needs to align with spline path. (DONE)
 		# (int)spline[0][x] - spline[1][x] = how much movement() should occur, 
