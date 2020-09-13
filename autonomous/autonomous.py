@@ -204,7 +204,10 @@ def algorithm(draw, grid, start, end, xList, yList):
 
 	return xList, yList
 
-def movement(direction, endNode, win, grid, rows, width): # moving the car vertically so it's always 41x41, left = 0, right = 1
+def movement(direction, endNode, win, grid, rows, width, tiles): # moving the car vertically so it's always 41x41, left = 0, right = 1
+	if direction == '':
+		return endNode
+
 	boundaryKeyList = []
 	for node in BOUNDARYCENTRES.keys():
 		boundaryKeyList.append(node)
@@ -224,23 +227,23 @@ def movement(direction, endNode, win, grid, rows, width): # moving the car verti
 		boundaryCreator(size, row, col, 1, win, grid, rows, width) # clears the boundary and resets the states of cleared nodes
 		BOUNDARYCENTRES.pop(node)
 		if direction == 'right': 		# if ego moves right (upscreen) boundaries go left (downscreen)
-			row += 1
+			row += tiles
 		if direction == 'straight':
-			col += 1
+			col += tiles
 		if direction == 'left': 
-			row -= 1
+			row -= tiles
 		if direction == 'back':
-			col -= 1
+			col -= tiles
 		boundaryCreator(size, row, col, 0, win, grid, rows, width) # recreates the boundary - and adds to BoundaryCentreTracking dictionary
 	
 	if direction == 'right':
-		endRow += 1
+		endRow += tiles
 	if direction == 'straight':
-		endCol += 1
+		endCol += tiles
 	if direction == 'left': 
-		endRow -= 1
+		endRow -= tiles
 	if direction == 'back':
-		endCol -= 1
+		endCol -= tiles
 
 	# updated coords reset end point
 	endNodeUpdated = grid[endRow][endCol]
@@ -296,6 +299,9 @@ def h(p1, p2): # p1 and p2 are return values of get_pos()
 	diffY = abs(y1 - y2)
 	# return diffX + diffY # Manhattan
 	return math.sqrt(diffX**2 + diffY**2)	# Euclidean
+
+def map(x, in_min, in_max, out_min, out_max):
+  return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 # Fill up grid with nodes
 def populate_grid(numRows, gridWidth):
@@ -355,12 +361,13 @@ pygame.display.set_caption("Path Planning")
 
 
 def main(win, width, ROWS):
-	print("hello")
 	midCoords = math.ceil(ROWS/2) - 1 # the middle block: ceil(NUMROWS/2) - 1 because 0th index
 	grid = populate_grid(ROWS, width)
 	
-	endRow = 1
+	# endRow = 1
 	endCol = 36
+	endRow = 25
+
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
 
@@ -388,10 +395,13 @@ def main(win, width, ROWS):
 	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
 	
+	localChangeList = []
 	numDetections = 0
 	run = True
+	loopIter = 0
+	mainIter = 0
+
 	while run:
-		
 		if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
 			print("YOU CRASHED.")
 
@@ -422,7 +432,7 @@ def main(win, width, ROWS):
 					
 		# 			xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
 
-		 
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				run = False
@@ -430,16 +440,16 @@ def main(win, width, ROWS):
 			# if some detection - run algorithm
 			if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
 				if event.key == pygame.K_UP:
-					end = movement('right', end, win, grid, ROWS, width)
+					end = movement('right', end, win, grid, ROWS, width, 1)
 
 				if event.key == pygame.K_LEFT:
-					end = movement('straight', end, win, grid, ROWS, width)
+					end = movement('straight', end, win, grid, ROWS, width, 1)
 
 				if event.key == pygame.K_DOWN:
-					end = movement('left', end, win, grid, ROWS, width)				
+					end = movement('left', end, win, grid, ROWS, width, 1)				
 					
 				if event.key == pygame.K_RIGHT:
-					end = movement('back', end, win, grid, ROWS, width)
+					end = movement('back', end, win, grid, ROWS, width, 1)
 
 				for row in grid:
 					for node in row:
@@ -466,23 +476,14 @@ def main(win, width, ROWS):
 
 				tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
 				u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
-				out = interpolate.splev(u,tck) # 'out' is the interpolated array of new x,y positions
+				out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows out[1] = cols
 
 				localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
-
-				for i in range(len(out[0])-1):	# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
-					xDiff = out[0][i]-out[0][i+1]
-					yDiff = out[1][i]-out[1][i+1]
-					mag = math.sqrt(xDiff**2 + yDiff**2)
-					angle = (int)((math.atan2(yDiff,xDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
-					tempx = round(xDiff)	# if negative, rows would be increasing --> car is going left --> call movement(left)
-					tempy = round(yDiff)	# if negative, cols would be increasing --> car is going back --> call movement(back)
-					localChangeList.append((tempx,tempy,mag,angle))
-
-				for i in range(len(out[0])):
-					print("X:ROW:", out[0][i], "Y:COL:", out[1][i])
-					if i < len(out[0])-1:
-						print("X", localChangeList[i][0], "Y", localChangeList[i][1], "MAG", localChangeList[i][2], "ANGLE", localChangeList[i][3])
+				for i in range(len(out[0])-1):
+					# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
+					rowDiff = out[0][i]-out[0][i+1]	# Note, this order will allow O(N) pop() later on for the first ego position.
+					colDiff = out[1][i]-out[1][i+1]	
+					localChangeList.append((rowDiff, colDiff))
 
 				# visualize and clear lists containing path for next iteration
 				plt.figure()
@@ -490,26 +491,76 @@ def main(win, width, ROWS):
 				plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
 				plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
 				plt.title('B-Spline Interpolation')
+				plt.show(block=False)
+				plt.pause(10)
+				plt.close()
+				
 				xList = []
 				yList = []
-				plt.show(block=False)
-				plt.pause(15)
-				plt.close()
+				mainIter = len(out[0])-1
+				loopIter+=1
 
-				
+		# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
+		# IF NO DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
+		
+		if loopIter == 0:
+			continue
+		
+		# # movement(whatever)
+		if len(localChangeList) == 0:
+			print("You made it!")
+			break
+		
+		# infoTuple indexing: X,Y,MAG,ANGLE
+		infoTuple = localChangeList[len(localChangeList)-1]
+		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
+		rowDiff = infoTuple[0]
+		colDiff = infoTuple[1]
+		mag = math.sqrt(rowDiff**2 + colDiff**2)
+		angle = (int)((math.atan2(colDiff,rowDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
+		tempx = round(rowDiff)	# if negative, rows would be increasing --> car is going left --> call movement(left)
+		tempy = round(colDiff)	# if negative, cols would be increasing --> car is going back --> call movement(back)
+		
+		print("X:ROW:", out[0][mainIter], "Y:COL:", out[1][mainIter])
+		print("X", tempx, "Y", tempy)
+		
+		longitudinalDir = ''
+		lateralDir = ''
 
-				# Goal: movement() needs to align with spline path. (DONE)
-				# (int)spline[0][x] - spline[1][x] = how much movement() should occur, 
-				# same time: (int)spline[0][y] - spline[1][y] = how much movement() should occur, 
-				
-				# only way you get a new xList or yList is if a new boundary is detected.
+		# if either are 0, no movement will happen in that direction
+		if colDiff > 0:
+			longitudinalDir = 'back'
+		elif colDiff < 0:
+			longitudinalDir = 'straight'
+		
+		if rowDiff > 0:
+			lateralDir = 'right'
+		elif rowDiff < 0:
+			lateralDir = 'left'
 
-				# How the car follow the path:
-				# first decide on direction of travel, then map the differential turn
-				# map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
-				# map the magnitude of the pytahgorean val of two consecutive spline points to the time the motors are moving at said differential
+		# move boundaries and end point
+		end = movement(longitudinalDir, end, win, grid, ROWS, width, abs(colDiff))
+		end = movement(lateralDir, end, win, grid, ROWS, width, abs(rowDiff))
 
-	# REMEMBER TO CLEAR LISTX AND LISTY AFTER ALGORITHM RUNS
+		
+
+		mainIter -= 1
+		localChangeList.pop()
+
+
+
+
+		# Goal: movement() needs to align with spline path. (DONE)
+		# (int)spline[0][x] - spline[1][x] = how much movement() should occur, 
+		# same time: (int)spline[0][y] - spline[1][y] = how much movement() should occur, 
+
+		# only way you get a new xList or yList is if a new boundary is detected.
+
+		# How the car follow the path:
+		# first decide on direction of travel, then map the differential turn
+		# map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
+		# map the magnitude of the pytahgorean val of two consecutive spline points to the time the motors are moving at said differential
+
 	pygame.quit()
 
 main(WIN, SCREENWIDTH, NUMROWS)
