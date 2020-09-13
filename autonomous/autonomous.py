@@ -383,9 +383,9 @@ def main(win, width, ROWS):
 	midCoords = math.ceil(ROWS/2) - 1 # the middle block: ceil(NUMROWS/2) - 1 because 0th index
 	grid = populate_grid(ROWS, width)
 	
-	# endRow = 1
-	endCol = 36
-	endRow = 25
+	endRow = 1
+	endCol = 26
+	# endRow = 25
 
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
@@ -414,7 +414,6 @@ def main(win, width, ROWS):
 	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
 	
-	localChangeList = []
 	numDetections = 0
 	run = True
 	loopIter = 0
@@ -474,6 +473,8 @@ def main(win, width, ROWS):
 					for node in row:
 						node.update_neighbors(grid)
 				
+				xList = []
+				yList = []
 				xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
 
 				# if event.key == pygame.K_c:
@@ -499,11 +500,11 @@ def main(win, width, ROWS):
 
 				localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
 				for i in range(len(out[0])-1):
+					# out[0][0] is the last interpolated value (farthest from ego position)
 					# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
 					rowDiff = out[0][i]-out[0][i+1]	# Note, this order will allow O(N) pop() later on for the first ego position.
 					colDiff = out[1][i]-out[1][i+1]	
 					localChangeList.append((rowDiff, colDiff))
-
 				# visualize and clear lists containing path for next iteration
 				plt.figure()
 				plt.plot(x, y, 'ro', out[0], out[1], 'b')
@@ -511,11 +512,11 @@ def main(win, width, ROWS):
 				plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
 				plt.title('B-Spline Interpolation')
 				plt.show(block=False)
+
 				plt.pause(1)
-				plt.close()
 				
-				xList = []
-				yList = []
+				# plt.close()
+
 				mainIter = len(out[0])-1
 				loopIter+=1
 
@@ -529,37 +530,110 @@ def main(win, width, ROWS):
 			break
 		
 		# infoTuple indexing: X,Y,MAG,ANGLE
-		infoTuple = localChangeList[len(localChangeList)-1]
+		infoTuple = localChangeList[len(localChangeList)-1] # closest one to the ego vehicle
 		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
 		rowDiff = infoTuple[0]
 		colDiff = infoTuple[1]
 		mag = math.sqrt(rowDiff**2 + colDiff**2)
 		angle = (int)((math.atan2(colDiff,rowDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
-		tempRow = (int)(round(rowDiff))	# if negative, rows would be increasing --> car is going left --> call movement(left)
-		tempCol = (int)(round(colDiff))	# if negative, cols would be increasing --> car is going back --> call movement(back)
 		
-		print("X:ROW:", out[0][mainIter], "Y:COL:", out[1][mainIter])
-		print("X", tempRow, "Y", tempCol)
+		# for i in range(len(localChangeList)):
+		# 	print("COL", localChangeList[i][0], "ROW", localChangeList[i][1])
+		iteration = len(xList)-1
+		print(xList[iteration], yList[iteration])
+		print("MINUS 1", xList[iteration-1], yList[iteration-1])
+		print(xList[iteration]-xList[iteration-1])
+		# break
+		# print("ROWDIFF", rowDiff, "COLDIFF:" , colDiff)
+			
+	
+		# need to see how much is overlapped from xList and yList to the movement happening in spline.
+		# max of rowDiff and colDiff takes precedence - shot caller
+		# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
+		# ex. max()--> 2.392, if max was col --> look in yList, else look in xList, pop() and subtract till max is almost reached
+		# if you subtract and pop one more time, will it be a greater distance from 0 than if you left it? --> if yes, leave it--> that's where end is.
 		
-		longitudinalDir = ''
-		lateralDir = ''
+		if abs(rowDiff) >= abs(colDiff):
+			shotCaller = abs(rowDiff)
+			checkRow = True
+		else:
+			shotCaller = abs(colDiff)
+			checkRow = False
+		
+		dir = ''
+		iteration = len(xList)-1 # would give the first came_from[] values
+		print("ITERATION", iteration)
+		print("SHOTCALLER", checkRow)
+		# xList[0] has the row position of start tile
 
-		# if either are 0, no movement will happen in that direction
-		if tempCol > 0:
-			longitudinalDir = 'back'
-		elif tempCol < 0:
-			longitudinalDir = 'straight'
+		# difference between consecutive xList vals
+		# goal: does shotcaller benefit from adding another xList val or does it get further awawy from 0?
 		
-		if tempRow > 0:
-			lateralDir = 'left'
-		elif tempRow < 0:
-			lateralDir = 'right'
+		if checkRow:
+			nextAddition = (abs(xList[iteration]-xList[iteration-1]))
+			
+			# abs(shotCaller - nextAddition) < shotCaller; is closer to 0 than just shotCaller 3-1 = 2 vs 3, 1-6 = -5 --> 5 vs 1
+			
+			while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
+				nodeX, nodeY = xList[iteration], yList[iteration]
+				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
+				if nextNodeX-nodeX > 0:
+					dir = 'left'
+				elif nextNodeX-nodeX < 0:
+					dir = 'right'
+				elif nextNodeY-nodeY > 0:
+					dir = 'back'
+				elif nextNodeY-nodeY < 0:
+					dir = 'straight'
+				else:
+					dir = '' 
+				
+				# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
+				end = movement(dir, end, win, grid, ROWS, width, 1)
 
-		print("LONGI", longitudinalDir, tempCol, "LATERAL", lateralDir, tempRow, "\n")
-		
-		# move boundaries and end point
-		end = movement(longitudinalDir, end, win, grid, ROWS, width, tempCol)
-		end = movement(lateralDir, end, win, grid, ROWS, width, tempRow)
+				xList.pop()
+				yList.pop()
+				iteration = iteration-1
+				if iteration > 0:
+					nextAddition = (abs(xList[iteration]-xList[iteration-1]))
+
+			print("INSIDE CHECKROW", xList)
+			print("INSIDE CHECKROW", yList)
+
+		else: #ONLY DIFFERENCE is yList instead of xList for columns being the shotcaller (bigger val)
+			nextAddition = (abs(yList[iteration]-yList[iteration-1]))
+			while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
+				nodeX, nodeY = xList[iteration], yList[iteration]
+				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
+				
+				if nextNodeX-nodeX > 0:
+					dir = 'left'
+				elif nextNodeX-nodeX < 0:
+					dir = 'right'
+				elif nextNodeY-nodeY > 0:
+					dir = 'back'
+				elif nextNodeY-nodeY < 0:
+					dir = 'straight'
+				else:
+					dir = '' 
+				
+				# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
+				end = movement(dir, end, win, grid, ROWS, width, 1)
+				yList.pop()
+				xList.pop()	# need to pop both of them since they make up one point.
+				iteration -= 1
+				if iteration > 0:
+					nextAddition = (abs(xList[iteration]-xList[iteration-1]))
+
+			print("INSIDE CHECKCOL", xList)
+			print("INSIDE CHECKCOL", yList)
+
+
+		# print("ROW:", out[0][mainIter], "COL:", out[1][mainIter])
+		# print(mag, angle, "\n")
+
+
+		# Do this only everytime car moves one full magnitude - magnitude is between n number of spline points and so is out[0] gets done
 
 		time.sleep(1)
 		
@@ -567,7 +641,7 @@ def main(win, width, ROWS):
 		localChangeList.pop()
 
 
-		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!!
+		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FXIED
 
 		# Goal: movement() needs to align with spline path. (DONE)
 		# (int)spline[0][x] - spline[1][x] = how much movement() should occur, 
