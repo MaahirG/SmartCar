@@ -205,7 +205,8 @@ def algorithm(draw, grid, start, end, xList, yList):
 	return xList, yList
 
 def movement(direction, endNode, win, grid, rows, width, tiles): # moving the car vertically so it's always 41x41, left = 0, right = 1
-	if direction == '':
+	if direction == None:
+		print("POTASSIUM")
 		return endNode
 
 	boundaryKeyList = []
@@ -245,11 +246,11 @@ def movement(direction, endNode, win, grid, rows, width, tiles): # moving the ca
 	if direction == 'back':
 		endCol -= tiles
 
+	print(endCol,endRow)
 	# updated coords reset end point
 	endNodeUpdated = grid[endRow][endCol]
 	endNodeUpdated.make_end()
 
-	draw(win, grid, rows, width)	
 	return endNodeUpdated
 
 # doesn't check edge cases, out of bounds etc
@@ -284,7 +285,8 @@ def boundaryCreator(diameter, x, y, cleanup, win, grid, rows, width):
 			for k in range(startDescent,endDescent+1):
 				grid[x+i][y+k].set_state(state)
 		else: 
-			print("You are at the middle!")
+			# print("You are at the middle!")
+			pass
 		
 		# don't need loops twice for the vertical line of the star, above covers it 
 		grid[x][y+i].set_state(state)
@@ -392,8 +394,8 @@ def main(win, width, ROWS):
 	# camera = jetson.utils.gstCamera(1280, 720, "0")
 	# cv2.destroyAllWindows()
 
-	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
+	# boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+	# boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
 	
 	localChangeList = []
 	numDetections = 0
@@ -492,7 +494,7 @@ def main(win, width, ROWS):
 				plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
 				plt.title('B-Spline Interpolation')
 				plt.show(block=False)
-				plt.pause(10)
+				plt.pause(1)
 				plt.close()
 				
 				xList = []
@@ -518,32 +520,34 @@ def main(win, width, ROWS):
 		colDiff = infoTuple[1]
 		mag = math.sqrt(rowDiff**2 + colDiff**2)
 		angle = (int)((math.atan2(colDiff,rowDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
-		tempx = round(rowDiff)	# if negative, rows would be increasing --> car is going left --> call movement(left)
-		tempy = round(colDiff)	# if negative, cols would be increasing --> car is going back --> call movement(back)
+		tempRow = (int)(round(rowDiff))	# if negative, rows would be increasing --> car is going left --> call movement(left)
+		tempCol = (int)(round(colDiff))	# if negative, cols would be increasing --> car is going back --> call movement(back)
 		
 		print("X:ROW:", out[0][mainIter], "Y:COL:", out[1][mainIter])
-		print("X", tempx, "Y", tempy)
+		print("X", tempRow, "Y", tempCol)
 		
 		longitudinalDir = ''
 		lateralDir = ''
 
 		# if either are 0, no movement will happen in that direction
-		if colDiff > 0:
+		if tempCol > 0:
 			longitudinalDir = 'back'
-		elif colDiff < 0:
+		elif tempCol < 0:
 			longitudinalDir = 'straight'
 		
-		if rowDiff > 0:
-			lateralDir = 'right'
-		elif rowDiff < 0:
+		if tempRow > 0:
 			lateralDir = 'left'
+		elif tempRow < 0:
+			lateralDir = 'right'
 
-		# move boundaries and end point
-		end = movement(longitudinalDir, end, win, grid, ROWS, width, abs(colDiff))
-		end = movement(lateralDir, end, win, grid, ROWS, width, abs(rowDiff))
-
+		print("LONGI", longitudinalDir, tempCol, "LATERAL", lateralDir, tempRow, "\n")
 		
+		# move boundaries and end point
+		end = movement(longitudinalDir, end, win, grid, ROWS, width, tempCol)
+		end = movement(lateralDir, end, win, grid, ROWS, width, tempRow)
 
+		time.sleep(0.3)
+		
 		mainIter -= 1
 		localChangeList.pop()
 
