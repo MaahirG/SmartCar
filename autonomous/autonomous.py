@@ -528,7 +528,7 @@ def main(win, width, ROWS):
 		elif len(localChangeList) == 0:
 			print("You made it!")
 			break
-		
+		print(localChangeList[0][0], localChangeList[0][1]) #farthest from ego pose
 		# infoTuple indexing: X,Y,MAG,ANGLE
 		infoTuple = localChangeList[len(localChangeList)-1] # closest one to the ego vehicle
 		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
@@ -567,11 +567,11 @@ def main(win, width, ROWS):
 		dir = ''
 		
 		while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
-			print(shotCaller)
+			# print(shotCaller)
 			shotCaller -= nextAddition
-			print(nextAddition)
+			# print(nextAddition)
 			nodeX, nodeY = xList[iteration], yList[iteration]
-			print(nodeX,nodeY)
+			# print(nodeX,nodeY)
 			nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
 			
 			if nextNodeX-nodeX > 0:
@@ -587,14 +587,14 @@ def main(win, width, ROWS):
 			
 			# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
 			end = movement(dir, end, win, grid, ROWS, width, 1)
-			
+			print(end.get_pos())
 			xList.pop()
 			yList.pop()
-
+			
 			iteration = iteration-1
 			if iteration > 0:
 				nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
-			time.sleep(2)
+			time.sleep(0.5)
 
 		# print("ROW:", out[0][mainIter], "COL:", out[1][mainIter])
 		# print(mag, angle, "\n")
@@ -602,6 +602,8 @@ def main(win, width, ROWS):
 		# Do this only everytime car moves one full magnitude - magnitude is between n number of spline points and so is out[0] gets done
 		mainIter -= 1
 		localChangeList.pop()
+		print("CHANGELISTSIZE:" , len(localChangeList))
+		print("CHANGELISTSIZE:" , len(xList))		# 3 LEFT OVER 
 
 
 		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FXIED
