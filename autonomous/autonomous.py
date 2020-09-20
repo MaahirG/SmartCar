@@ -361,17 +361,17 @@ def draw(win, grid, rows, screenWidth):
 def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
 	angDiff = abs(curAngle - desiredAngle)
 	turnTime = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)
-
+	
 	if (desiredAngle > curAngle):
 		print("ZEROTURN LEFT FOR TIME:", turnTime)
-		GPIO.output(pins["IN1"],GPIO.HIGH)
+		GPIO.output(pins["IN1"],GPIO.HIGH)		# in1 is right side of car
 		GPIO.output(pins["IN2"],GPIO.LOW)
-		GPIO.output(pins["IN3"],GPIO.HIGH)
+		GPIO.output(pins["IN3"],GPIO.LOW)
 		GPIO.output(pins["IN4"],GPIO.LOW)
 	else:
 		print("ZEROTURN RIGHT FOR TIME:", turnTime)
 		GPIO.output(pins["IN1"],GPIO.LOW)
-		GPIO.output(pins["IN2"],GPIO.HIGH)
+		GPIO.output(pins["IN2"],GPIO.LOW)
 		GPIO.output(pins["IN3"],GPIO.LOW)
 		GPIO.output(pins["IN4"],GPIO.HIGH)
 
@@ -436,8 +436,8 @@ def main(win, width, ROWS):
 	APWM = GPIO.PWM(pins["ENA"],50) # Frequency 100 cycles per second
 	BPWM = GPIO.PWM(pins["ENB"],50) 
 
-	APWM.start(60) # Duty Cycle
-	BPWM.start(60)
+	APWM.start(100) # Duty Cycle
+	BPWM.start(100)
 
 
 
@@ -477,14 +477,19 @@ def main(win, width, ROWS):
 	# EXAMPLE: Beginning reference car is x45, y5 inches away, we will compute x,y distance from start point 19,19 
 	# to boundary hardcoded - selected by the user and will relate that to either x OR y. say 45x Inches = 
 
-	irlX, irlY, irlRadius, Size = input("ENTER HERE").split() # take as input, boundaries location, +-(x) +-(y) in meters, also the entire SQUARE that you are trying to fill 2meter by 2meter?
-	irlX = float(irlX)
-	irlY = float(irlY)
-	irlRadius = float(irlRadius)
-	Size = float(Size)
+	# irlX, irlY, irlRadius, Size = input("ENTER HERE").split() # take as input, boundaries location, +-(x) +-(y) in meters, also the entire SQUARE that you are trying to fill 2meter by 2meter?
+	# irlX = float(irlX)
+	# irlY = float(irlY)
+	# irlRadius = float(irlRadius)
+	# Size = float(Size)
 
-	experimentalZeroTurnTime = 3 # experimental
-	speed = 0.3 # 60% motor speed/duty cycle in meters/second
+	irlX = -0.45
+	irlY = 0.63 
+	irlRadius = 1
+	Size = 5
+
+	experimentalZeroTurnTime = 9 # experimental
+	speed = 0.204 # 60% motor speed/duty cycle in meters/second
 	curAngle = 270 # default for the car pointing in the forward (left, -x) direction
 
 	realRatioX = irlX/irlRadius
@@ -492,7 +497,7 @@ def main(win, width, ROWS):
 
 	gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
 	gridYEquivalent = abs((ROWS/2)*realRatioY)
-
+	print(gridXEquivalent)
 	if irlX < 0:
 		boundCol = midCoords - gridXEquivalent # columns would decrease
 	elif irlX > 0: # columns increase
@@ -509,6 +514,8 @@ def main(win, width, ROWS):
 	timePerMeter = 1/speed
 	timePerTile = timePerMeter*metersPerTile
 	print("TIME PER TILE", timePerTile)
+	print("METERS PER TILE", metersPerTile)
+	print("TIME PER METER", timePerMeter)
 
 	numDetections = 0
 	run = True
@@ -731,8 +738,10 @@ def main(win, width, ROWS):
 			
 			print("Visualization Mapping Time:", time.time()-timer)
 			while (time.time() - timer) < travelTime:
-				print("Still Moving", time.time()-timer)
+				# print("Still Moving", time.time()-timer)
 				continue
+			
+			stopCar(pins)
 
 			print("DIST:", distance,"ANGLE", desiredAngle, "\n")
 			# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done

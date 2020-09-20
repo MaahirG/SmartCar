@@ -63,18 +63,32 @@ def main():
     APWM = GPIO.PWM(pins["ENA"],50) # Frequency 100 cycles per second
     BPWM = GPIO.PWM(pins["ENB"],50) # Frequency 100 cycles per second
 
-    APWM.start(60) # Duty Cycle
-    BPWM.start(60)
+    APWM.start(100) # Duty Cycle
+    BPWM.start(100)
+
+
+    # Straight Floor = 4.9
+    # 360 100-0 Diff Floor = 16
+    # Straight Carpet = 3.3
+    # 360 100-0 Diff Carpet = 12.5
 
 
     try:
         while True:
-            moveCar(60)
-            time.sleep(1)
-            stopCar()
-            time.sleep(1)
-            getCarAngleTo(270, 180, 3)
-            time.sleep(1)
+            GPIO.output(pins["IN1"],GPIO.HIGH)
+            GPIO.output(pins["IN2"],GPIO.LOW)
+            GPIO.output(pins["IN3"],GPIO.LOW)
+            GPIO.output(pins["IN4"],GPIO.HIGH)
+            time.sleep(7)
+            break
+            # moveCar(60)
+            # time.sleep(7)
+            # break
+            # time.sleep(1)
+            # stopCar()
+            # time.sleep(1)
+            # getCarAngleTo(270, 180, 3)
+            # time.sleep(1)
 
 
     finally:
