@@ -354,6 +354,24 @@ def draw(win, grid, rows, screenWidth):
 	pygame.display.update()
 
 
+def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime):
+		angDiff = abs(curAngle - desiredAngle)
+		time = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)
+
+		if (desiredAngle > curAngle):
+			print("ZEROTURN LEFT FOR TIME:", time)
+			# zeroTurnLeft(time)
+		else:
+			print("ZEROTURN RIGHT FOR TIME:", time)
+			# zeroTurnRight(time)
+
+def moveCar(speed):
+	print('Motors Forward at SPEED:', speed)
+	# motorsForward(speed)
+
+def stopCar():
+	pass
+
 '''
 Occupancy Map States::
 0-Obstacle
@@ -411,9 +429,49 @@ def main(win, width, ROWS):
 	# camera = jetson.utils.gstCamera(1280, 720, "0")
 	# cv2.destroyAllWindows()
 
-	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, row, col, cleanup, win, grid, rows, width)
 	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
+	# v = d/t --> get a set velocity and now you can always get the time to travel any distance (t = d/v)
+	# map the actual ruler distance to the first reference obstacle to the mapsize
+	# 60 inches obstacle, IRL maxsize = 100 --> 
+	# distance to the reference car that we'll put at some specified (20,36) boundary coordinate
+
+	# EXAMPLE: Beginning reference car is x45, y5 inches away, we will compute x,y distance from start point 19,19 
+	# to boundary hardcoded - selected by the user and will relate that to either x OR y. say 45x Inches = 
+
+	irlX, irlY, irlRadius, Size = input("ENTER HERE").split() # take as input, boundaries location, +-(x) +-(y) in meters, also the entire SQUARE that you are trying to fill 2meter by 2meter?
+	irlX = float(irlX)
+	irlY = float(irlY)
+	irlRadius = float(irlRadius)
+	Size = float(Size)
+
+	experimentalZeroTurnTime = 3 # experimental
+	speed = 0.3 # 60% motor speed/duty cycle in meters/second
+	curAngle = 270 # default for the car pointing in the forward (left, -x) direction
+
+	realRatioX = irlX/irlRadius
+	realRatioY = irlY/irlRadius # Approximate row lenghth of the longest sides of the actual human sized car grid.
+
+	gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
+	gridYEquivalent = abs((ROWS/2)*realRatioY)
+
+	if irlX < 0:
+		boundCol = midCoords - gridXEquivalent # columns would decrease
+	elif irlX > 0: # columns increase
+		boundCol = midCoords + gridXEquivalent
 	
+	if irlY < 0:
+		boundRow = midCoords + gridYEquivalent # rows would increase
+	elif irlY > 0: # rows decrease
+		boundRow = midCoords - gridYEquivalent
+	
+	boundaryCreator(5, int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+
+	metersPerTile = abs(irlX)/gridXEquivalent
+	timePerMeter = 1/speed
+	timePerTile = timePerMeter*metersPerTile
+	print("TIME PER TILE", timePerTile)
+
 	numDetections = 0
 	run = True
 	loopIter = 0
@@ -523,31 +581,41 @@ def main(win, width, ROWS):
 		# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
 		# IF NO DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
 		
-		if loopIter == 0:
+		iteration = len(xList)-1 # xList[iteration] would give: the closest to egopose from came_from[]
+
+		if loopIter == 0: # algorithm hasn't run yet.
 			continue
-		elif len(localChangeList) == 0:
+		elif len(localChangeList) == 0: # deplete localChangeList which is the spline point to point updates - may still be left overs in xList because of the shotcaller - nextAddition, so just go through the remaining 
+			while iteration > 0:
+				# this part is just for the visual - filling in the remaining movement() for the end points and boundaries
+				nodeX, nodeY = xList[iteration], yList[iteration]
+				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
+				
+				if nextNodeX-nodeX > 0:
+					dir = 'left'
+				elif nextNodeX-nodeX < 0:
+					dir = 'right'
+				elif nextNodeY-nodeY > 0:
+					dir = 'back'
+				elif nextNodeY-nodeY < 0:
+					dir = 'straight'
+				else:
+					dir = '' 
+				
+				end = movement(dir, end, win, grid, ROWS, width, 1)
+				print("end pos:" , end.get_pos())
+				xList.pop()
+				yList.pop()			
+				iteration -= 1
+				time.sleep(0.5)
+			
+			xList.pop()
+			yList.pop()
+
 			print("You made it!")
 			break
-		print(localChangeList[0][0], localChangeList[0][1]) #farthest from ego pose
-		# infoTuple indexing: X,Y,MAG,ANGLE
-		infoTuple = localChangeList[len(localChangeList)-1] # closest one to the ego vehicle
-		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
-		rowDiff = infoTuple[0]
-		colDiff = infoTuple[1]
-		mag = math.sqrt(rowDiff**2 + colDiff**2)
-		angle = (int)((math.atan2(colDiff,rowDiff) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
 
-	# TROUBLESHOOT PRINT STATEMENTS:	
-		# for i in range(len(localChangeList)):
-		# 	print("COL", localChangeList[i][0], "ROW", localChangeList[i][1])
-		# iteration = len(xList)-1
-		# print(xList[iteration], yList[iteration])
-		# print("MINUS 1", xList[iteration-1], yList[iteration-1])
-		# print(xList[iteration]-xList[iteration-1])
-		# break
-		# print("ROWDIFF", rowDiff, "COLDIFF:" , colDiff)
-			
-	
+
 		# need to see how much is overlapped from xList and yList to the movement happening in spline.
 		# max of rowDiff and colDiff takes precedence - shot caller
 		# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
@@ -555,26 +623,52 @@ def main(win, width, ROWS):
 		# if you subtract and pop one more time, will it be a greater distance from 0 than if you left it? --> if yes, leave it--> that's where end is.
 
 		# xList[0] has the row position of start tile
-
 		# difference between consecutive xList vals
 		# goal: does shotcaller benefit from adding another xList val or does it get further awawy from 0?
-		
 
-		# abs(shotCaller - nextAddition) < shotCaller; is closer to 0 than just shotCaller 3-1 = 2 vs 3, 1-6 = -5 --> 5 vs 1
-		iteration = len(xList)-1 # would give the first came_from[] values
-		nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1])
-		shotCaller = abs(rowDiff) + abs(colDiff)
-		dir = ''
+		# infoTuple indexing: X,Y,MAG,ANGLE
+		infoTuple = localChangeList[len(localChangeList)-1] # gives closest one to the ego vehicle
+		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
+		rowDiffClosestToEgo = infoTuple[0]
+		colDiffClosestToEgo = infoTuple[1]
+
+		# computed for each subset of spline that is a subpath
+		distance = math.sqrt(rowDiffClosestToEgo**2 + colDiffClosestToEgo**2)
+		desiredAngle = (int)((math.atan2(colDiffClosestToEgo,rowDiffClosestToEgo) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
 		
-		while abs(shotCaller - nextAddition) < shotCaller and iteration > 0:	# distance away from 0
-			# print(shotCaller)
+		nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) # difference between the two next came_from points 		shotCaller = abs(rowDiff) + abs(colDiff)
+		dir = ''
+		shotCaller = abs(rowDiffClosestToEgo) + abs(rowDiffClosestToEgo)
+
+		if abs(curAngle - desiredAngle) > 10:
+			# then only stop motors and readjust.
+			print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE")
+			stopCar()
+			getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
+		
+		# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
+		curAngle = desiredAngle # update anyways to protect for incremental error
+
+		travelTime = distance*timePerTile # tiles*time/tile
+		print("TRAVELTIME", travelTime)
+		moveCar(speed)
+		timer = time.time()		
+		
+		while shotCaller - nextAddition > 0 and iteration > 0:	# distance away from 0			
+
+			# incase car goes over 'travelTime' inside loop.
+			if (time.time() - timer) > travelTime:
+				stopCar()
+				print("STOPPED CAUGHT IN WHILE LOOP", (time.time()-timer))
+
+			# don't count this part as taking much time - just set teh motors going in desired direction and time.sleep(calcTime) after.
 			shotCaller -= nextAddition
-			# print(nextAddition)
+			
 			nodeX, nodeY = xList[iteration], yList[iteration]
-			# print(nodeX,nodeY)
 			nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
 			
 			if nextNodeX-nodeX > 0:
+			
 				dir = 'left'
 			elif nextNodeX-nodeX < 0:
 				dir = 'right'
@@ -587,23 +681,29 @@ def main(win, width, ROWS):
 			
 			# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
 			end = movement(dir, end, win, grid, ROWS, width, 1)
-			print(end.get_pos())
+			print("End pos:", end.get_pos())
 			xList.pop()
 			yList.pop()
 			
 			iteration = iteration-1
 			if iteration > 0:
 				nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
-			time.sleep(0.5)
+			# time.sleep(0.5) # MAP TO VELOCITY OF CAR 
+		
+		print("Visualization Mapping Time:", time.time()-timer)
+		while (time.time() - timer) < travelTime:
+			print("Still Moving", time.time()-timer)
+			continue
 
-		# print("ROW:", out[0][mainIter], "COL:", out[1][mainIter])
-		# print(mag, angle, "\n")
-		print("OUT OF LOOP")
-		# Do this only everytime car moves one full magnitude - magnitude is between n number of spline points and so is out[0] gets done
+		print("DIST:", distance,"ANGLE", desiredAngle, "\n")
+		# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
 		mainIter -= 1
 		localChangeList.pop()
-		print("CHANGELISTSIZE:" , len(localChangeList))
-		print("CHANGELISTSIZE:" , len(xList))		# 3 LEFT OVER 
+
+	pygame.quit()
+
+
+main(WIN, SCREENWIDTH, NUMROWS)
 
 
 		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FXIED
@@ -619,9 +719,9 @@ def main(win, width, ROWS):
 		# map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
 		# map the magnitude of the pytahgorean val of two consecutive spline points to the time the motors are moving at said differential
 
-	pygame.quit()
 
-main(WIN, SCREENWIDTH, NUMROWS)
+
+
 
 # each tile is 10cm. 
 # emulates other stuff moving around but really ego car is just moving around
