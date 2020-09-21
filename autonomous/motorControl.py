@@ -79,8 +79,8 @@ def main():
             GPIO.output(pins["IN2"],GPIO.LOW)
             GPIO.output(pins["IN3"],GPIO.LOW)
             GPIO.output(pins["IN4"],GPIO.HIGH)
-            time.sleep(7)
-            break
+            time.sleep(6)
+            stop()
             # moveCar(60)
             # time.sleep(7)
             # break

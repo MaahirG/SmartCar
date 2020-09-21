@@ -488,8 +488,8 @@ def main(win, width, ROWS):
 	irlRadius = 1
 	Size = 5
 
-	experimentalZeroTurnTime = 9 # experimental
-	speed = 0.204 # 60% motor speed/duty cycle in meters/second
+	experimentalZeroTurnTime = 7 # experimental
+	speed = 0.6 # 100% motor speed/duty cycle in meters/second
 	curAngle = 270 # default for the car pointing in the forward (left, -x) direction
 
 	realRatioX = irlX/irlRadius
@@ -653,7 +653,7 @@ def main(win, width, ROWS):
 					xList.pop()
 					yList.pop()			
 					iteration -= 1
-					time.sleep(0.5)
+
 				
 				xList.pop()
 				yList.pop()
@@ -690,22 +690,23 @@ def main(win, width, ROWS):
 				# then only stop motors and readjust.
 				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE")
 				stopCar(pins)
+				time.sleep(0.2)
 				getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
-			
+		
 			# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
 			curAngle = desiredAngle # update anyways to protect for incremental error
 
 			travelTime = distance*timePerTile # tiles*time/tile
 			print("TRAVELTIME", travelTime)
 			moveCar(pins)
-			timer = time.time()		
+			timer = time.clock()		
 			
 			while shotCaller - nextAddition > 0 and iteration > 0:	# distance away from 0			
 
 				# incase car goes over 'travelTime' inside loop.
-				if (time.time() - timer) > travelTime:
+				if (time.clock() - timer) > travelTime:
 					stopCar(pins)
-					print("STOPPED CAUGHT IN WHILE LOOP", (time.time()-timer))
+					print("STOPPED CAUGHT IN WHILE LOOP", (time.clock()-timer))
 
 				# don't count this part as taking much time - just set teh motors going in desired direction and time.sleep(calcTime) after.
 				shotCaller -= nextAddition
@@ -714,7 +715,6 @@ def main(win, width, ROWS):
 				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
 				
 				if nextNodeX-nodeX > 0:
-				
 					dir = 'left'
 				elif nextNodeX-nodeX < 0:
 					dir = 'right'
@@ -736,12 +736,11 @@ def main(win, width, ROWS):
 					nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
 				# time.sleep(0.5) # MAP TO VELOCITY OF CAR 
 			
-			print("Visualization Mapping Time:", time.time()-timer)
-			while (time.time() - timer) < travelTime:
-				# print("Still Moving", time.time()-timer)
+			print("Visualization Mapping Time:", time.clock()-timer)
+			while (time.clock() - timer) < travelTime:
+				# print("Still Moving", time.clock()-timer)
 				continue
 			
-			stopCar(pins)
 
 			print("DIST:", distance,"ANGLE", desiredAngle, "\n")
 			# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
