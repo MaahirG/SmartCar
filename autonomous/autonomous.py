@@ -146,9 +146,6 @@ class Node:
 	def __lt__(self, other):
 		return False
 
-SMOOTHX = []
-SMOOTHY = []
-
 def reconstruct_path(came_from, current, draw, xList, yList):
 	while current in came_from:
 		p1,p2 = current.get_pos()
@@ -184,7 +181,7 @@ def algorithm(draw, grid, start, end, xList, yList):
 			if event.type == pygame.QUIT:
 				pygame.quit()
 
-		current_node = current_set.get()[2] 		# get the node
+		current_node = current_set.get()[2] 		# get the node from tuple
 		current_set_tracker.remove(current_node)
 
 		if current_node == end:
@@ -193,7 +190,7 @@ def algorithm(draw, grid, start, end, xList, yList):
 			return xList, yList
 
 		for neighbor in current_node.neighbors:
-			temp_g_score = g_score[current_node] + 1
+			temp_g_score = g_score[current_node] + 1 # 1 is g_score[neighbor]
 
 			if temp_g_score < g_score[neighbor]:  # LESS THAN INFINITY usually or if you just visited one of the neighbours that you are looking back on, it could 
 				came_from[neighbor] = current_node
@@ -441,8 +438,6 @@ def main(win, width, ROWS):
 
 
 
-
-
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
 
@@ -467,8 +462,6 @@ def main(win, width, ROWS):
 	# camera = jetson.utils.gstCamera(1280, 720, "0")
 	# cv2.destroyAllWindows()
 
-	boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, row, col, cleanup, win, grid, rows, width)
-	boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
 	# v = d/t --> get a set velocity and now you can always get the time to travel any distance (t = d/v)
 	# map the actual ruler distance to the first reference obstacle to the mapsize
 	# 60 inches obstacle, IRL maxsize = 100 --> 
@@ -482,35 +475,46 @@ def main(win, width, ROWS):
 	# irlY = float(irlY)
 	# irlRadius = float(irlRadius)
 	# Size = float(Size)
+	
+	# TEST CASES: 
+	# boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, row, col, cleanup, win, grid, rows, width)
+	# boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
+	
 
-	irlX = -0.45
-	irlY = 0.63 
-	irlRadius = 1
-	Size = 5
+	# Keep in mind: 'RADIUS' and MEASURED FROM THE MIDCOORDS --> 0.63 up (in the 180 degree direction) from the midcoords.
+	# Test case for 9,11,22
+	# irlX = 0.15
+	# irlY = 0.4 
+	# irlRadius = 1
+	# Size = 9
 
 	experimentalZeroTurnTime = 7 # experimental
 	speed = 0.6 # 100% motor speed/duty cycle in meters/second
-	curAngle = 270 # default for the car pointing in the forward (left, -x) direction
+	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
 
-	realRatioX = irlX/irlRadius
-	realRatioY = irlY/irlRadius # Approximate row lenghth of the longest sides of the actual human sized car grid.
 
-	gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
-	gridYEquivalent = abs((ROWS/2)*realRatioY)
-	print(gridXEquivalent)
-	if irlX < 0:
-		boundCol = midCoords - gridXEquivalent # columns would decrease
-	elif irlX > 0: # columns increase
-		boundCol = midCoords + gridXEquivalent
-	
-	if irlY < 0:
-		boundRow = midCoords + gridYEquivalent # rows would increase
-	elif irlY > 0: # rows decrease
-		boundRow = midCoords - gridYEquivalent
-	
-	boundaryCreator(5, int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+	realObstacles = [(0.15 ,0.4, 1, 9),(-0.45, 0.63, 1, 5), (0.55, 0.8,1,7)] # irlX, irlY, irlRadius, Size 
 
-	metersPerTile = abs(irlX)/gridXEquivalent
+	for obstacle in realObstacles:
+		realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadius
+		realRatioY = obstacle[1]/obstacle[2] # irlY/irlRadius --> Approximate row length of the longest sides of the actual human sized car grid.
+
+		gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
+		gridYEquivalent = abs((ROWS/2)*realRatioY)
+
+		if obstacle[0] < 0:
+			boundCol = midCoords - gridXEquivalent # columns would decrease
+		elif obstacle[0] > 0: # columns increase
+			boundCol = midCoords + gridXEquivalent
+		
+		if obstacle[1] < 0:
+			boundRow = midCoords + gridYEquivalent # rows would increase
+		elif obstacle[1] > 0: # rows decrease
+			boundRow = midCoords - gridYEquivalent
+		
+		boundaryCreator(obstacle[3], int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+
+	metersPerTile = abs(realObstacles[len(realObstacles)-1][0])/gridXEquivalent  # abs(irlX)/gridXEquivalent, irlX of last boundary because gridXEquivalent will be of the last boundary
 	timePerMeter = 1/speed
 	timePerTile = timePerMeter*metersPerTile
 	print("TIME PER TILE", timePerTile)
@@ -562,8 +566,9 @@ def main(win, width, ROWS):
 				# if some detection - run algorithm
 				if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
 					if event.key == pygame.K_UP:
-						end = movement('right', end, win, grid, ROWS, width, 1)
-
+						# end = movement('right', end, win, grid, ROWS, width, 1)
+						boundaryCreator(3, 11, 15, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+						print("TRYING TO CREATE BOUNDARY")
 					if event.key == pygame.K_LEFT:
 						end = movement('straight', end, win, grid, ROWS, width, 1)
 
@@ -594,14 +599,14 @@ def main(win, width, ROWS):
 					dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
 
 					if dist < 15:
-						thresh = (int)(ROWS*0.2) # too many points to try and map to the path with not much movement means choppy turns - so restrict it.
+						thresh = (int)(ROWS*0.15) # too many points to try and map to the path with not much movement means choppy turns - so restrict it.
 					else:
-						thresh = (int)(ROWS*0.3)
+						thresh = (int)(ROWS*0.25)
 
 					tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
 					u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
 					out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows out[1] = cols
-
+					print("INTERPOLATED ORIGINAL ARRAY SIZE: ", len(out[0]))
 					localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
 					for i in range(len(out[0])-1):
 						# out[0][0] is the last interpolated value (farthest from ego position)
@@ -688,7 +693,7 @@ def main(win, width, ROWS):
 
 			if abs(curAngle - desiredAngle) > 10:
 				# then only stop motors and readjust.
-				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE")
+				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
 				stopCar(pins)
 				time.sleep(0.2)
 				getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
@@ -742,7 +747,7 @@ def main(win, width, ROWS):
 				continue
 			
 
-			print("DIST:", distance,"ANGLE", desiredAngle, "\n")
+			print("DIST JUST TRAVELLED:", distance, "@DESIRED ANGLE", desiredAngle, "\n")
 			# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
 			mainIter -= 1
 			localChangeList.pop()
