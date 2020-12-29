@@ -354,11 +354,37 @@ def draw(win, grid, rows, screenWidth):
 	draw_grid(win, rows, screenWidth)
 	pygame.display.update()
 
+# # Opposite of wifi stick is straight
+# def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
+# 	angDiff = abs(curAngle - desiredAngle)
+# 	turnTime = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)
+# 	if (desiredAngle > curAngle):
+# 		print("ZEROTURN LEFT FOR TIME:", turnTime)
+# 		GPIO.output(pins["IN1"],GPIO.LOW)		# in1 is right side of car
+# 		GPIO.output(pins["IN2"],GPIO.LOW)
+# 		GPIO.output(pins["IN3"],GPIO.HIGH)
+# 		GPIO.output(pins["IN4"],GPIO.LOW)
+# 	else:
+# 		print("ZEROTURN RIGHT FOR TIME:", turnTime)
+# 		GPIO.output(pins["IN1"],GPIO.LOW)
+# 		GPIO.output(pins["IN2"],GPIO.HIGH)
+# 		GPIO.output(pins["IN3"],GPIO.LOW)
+# 		GPIO.output(pins["IN4"],GPIO.LOW)
+
+# 	time.sleep(turnTime)
+# 	stopCar(pins)	
+
+# def moveCar(pins):
+# 	print("Motors Forward")
+	
+# 	GPIO.output(pins["IN1"],GPIO.LOW)
+# 	GPIO.output(pins["IN2"],GPIO.HIGH)
+# 	GPIO.output(pins["IN3"],GPIO.HIGH)
+# 	GPIO.output(pins["IN4"],GPIO.LOW)
 
 def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
 	angDiff = abs(curAngle - desiredAngle)
 	turnTime = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)
-	
 	if (desiredAngle > curAngle):
 		print("ZEROTURN LEFT FOR TIME:", turnTime)
 		GPIO.output(pins["IN1"],GPIO.HIGH)		# in1 is right side of car
@@ -377,6 +403,7 @@ def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
 
 def moveCar(pins):
 	print("Motors Forward")
+	
 	GPIO.output(pins["IN1"],GPIO.HIGH)
 	GPIO.output(pins["IN2"],GPIO.LOW)
 	GPIO.output(pins["IN3"],GPIO.LOW)
@@ -437,7 +464,6 @@ def main(win, width, ROWS):
 	BPWM.start(100)
 
 
-
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
 
@@ -487,13 +513,14 @@ def main(win, width, ROWS):
 	# irlY = 0.4 
 	# irlRadius = 1
 	# Size = 9
-
-	experimentalZeroTurnTime = 7 # experimental
+# OG: zeroturntime = 7, speed = 0.6
+	experimentalZeroTurnTime = 10 # experimental
 	speed = 0.6 # 100% motor speed/duty cycle in meters/second
 	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
 
 
-	realObstacles = [(0.15 ,0.4, 1, 9),(-0.45, 0.63, 1, 5), (0.55, 0.8,1,7)] # irlX, irlY, irlRadius, Size 
+	# realObstacles = [(0.15, 0.4, 1, 9),(-0.45, 0.63, 1, 5), (0.55, 0.8,1,7)] # irlX, irlY, irlRadius, Size 
+	realObstacles = [(0.3, 0.8, 2, 9),(-0.9, 1.26, 2, 5), (1.1, 1.6,2,7)] # irlX, irlY, irlRadius, Size 
 
 	for obstacle in realObstacles:
 		realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadius
@@ -619,7 +646,7 @@ def main(win, width, ROWS):
 					plt.plot(x, y, 'ro', out[0], out[1], 'b')
 					plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
 					plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
-					plt.title('B-Spline Interpolation')
+					plt.title('Interpolated Planned Path')
 					plt.show(block=False)
 
 					plt.pause(1)
@@ -695,7 +722,8 @@ def main(win, width, ROWS):
 				# then only stop motors and readjust.
 				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
 				stopCar(pins)
-				time.sleep(0.2)
+				time.sleep(0.1)
+
 				getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
 		
 			# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
@@ -703,6 +731,7 @@ def main(win, width, ROWS):
 
 			travelTime = distance*timePerTile # tiles*time/tile
 			print("TRAVELTIME", travelTime)
+
 			moveCar(pins)
 			timer = time.clock()		
 			
