@@ -8,10 +8,10 @@ import numpy as np
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
 import Jetson.GPIO as GPIO
-# import jetson.inference as ji
-# import jetson.utils
-# import numpy as np
-# import cv2
+import jetson.inference as ji
+import jetson.utils
+import numpy as np
+import cv2
 
 RED = (255, 0, 0) # Explored
 GREEN = (0, 255, 0)
@@ -426,20 +426,18 @@ ENDSTATE = 66
 NUMROWS = 40 # global
 SCREENWIDTH = 800
 
-WIN = pygame.display.set_mode((SCREENWIDTH, SCREENWIDTH))
-pygame.display.set_caption("Path Planning")
 
+import time
+def main(width, ROWS, mpQueue):
 
-def main(win, width, ROWS):
+	win = pygame.display.set_mode((SCREENWIDTH, SCREENWIDTH))
+	pygame.display.set_caption("Path Planning")
+
 	midCoords = math.ceil(ROWS/2) - 1 # the middle block: ceil(NUMROWS/2) - 1 because 0th index
 	grid = populate_grid(ROWS, width)
 	
 	endRow = 1
 	endCol = 26
-
-
-
-
 
 	pins = {
 				"ENA" : 32, #PWM
@@ -459,10 +457,8 @@ def main(win, width, ROWS):
 	GPIO.setup(pinList, GPIO.OUT, initial=GPIO.LOW) #INIT WITH MOTORS STOPPED
 	APWM = GPIO.PWM(pins["ENA"],50) # Frequency 100 cycles per second
 	BPWM = GPIO.PWM(pins["ENB"],50) 
-
 	APWM.start(100) # Duty Cycle
 	BPWM.start(100)
-
 
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
@@ -483,10 +479,6 @@ def main(win, width, ROWS):
 	car = [11,15,7]
 	# each detection is relative to the previous detection
 
-	# OPENCV DISPLAY
-	# net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
-	# camera = jetson.utils.gstCamera(1280, 720, "0")
-	# cv2.destroyAllWindows()
 
 	# v = d/t --> get a set velocity and now you can always get the time to travel any distance (t = d/v)
 	# map the actual ruler distance to the first reference obstacle to the mapsize
@@ -505,7 +497,7 @@ def main(win, width, ROWS):
 	# TEST CASES: 
 	# boundaryCreator(9, 11, 22, 0, win, grid, ROWS, width) #(diameter, row, col, cleanup, win, grid, rows, width)
 	# boundaryCreator(7, 3, 30, 0, win, grid, ROWS, width)
-	
+
 
 	# Keep in mind: 'RADIUS' and MEASURED FROM THE MIDCOORDS --> 0.63 up (in the 180 degree direction) from the midcoords.
 	# Test case for 9,11,22
@@ -513,7 +505,7 @@ def main(win, width, ROWS):
 	# irlY = 0.4 
 	# irlRadius = 1
 	# Size = 9
-# OG: zeroturntime = 7, speed = 0.6
+	# OG: zeroturntime = 7, speed = 0.6
 	experimentalZeroTurnTime = 10 # experimental
 	speed = 0.6 # 100% motor speed/duty cycle in meters/second
 	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
@@ -561,29 +553,43 @@ def main(win, width, ROWS):
 			grid[midCoords][midCoords].make_start()
 			draw(win, grid, ROWS, width)
 			
-			# img, width, height = camera.CaptureRGBA(zeroCopy=True)
-			# detections = net.Detect(img, width, height)
-			# if len(detections) > 0:
-			# 	for detection in detections:
-			# 		id = detection.ClassID
-			# 		print("ClassID:", id, "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
-			#         if id == 8 or id == 6 or id ==3:
-			#             print("DETECTED A VEHICLE")
-			#             if numDetections = 0:
-			#                 boundaryCreator(truck[2], truck[0], truck[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-			#                 numDetections += 1
-			#             elif numDetections = 1:
-			#                 boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-			#                 numDetections += 1
-			#             else
-			#                 print("Already detected!")
-			#                 break
-						
-			#             for row in grid:
-			# 			    for node in row:
-			# 				    node.update_neighbors(grid)
-						
-			# 			xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
+			# Get detections
+			if not mpQueue.empty():
+				detectionCollection = mpQueue.get()
+				print("IN MPQUEUE QUEUE MEANING NOT EMPTY!")
+				for detection in detectionCollection:
+					boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				print("LOOPED DETECTIONS IN mpQueue.get()")
+				# 	for row in grid:
+				# 		for node in row:
+				# 			node.update_neighbors(grid)
+					
+				# 	xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
+
+
+
+				# if id == 8 or id == 6 or id ==3:
+				# 	print("DETECTED A VEHICLE")
+				# 	if numDetections = 0:
+				# 		boundaryCreator(truck[2], truck[0], truck[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 		numDetections += 1
+				# 	elif numDetections = 1:
+				# 		boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 		numDetections += 1
+				# 	else
+				# 		print("Already detected!")
+				# 		break
+					
+				# if id == 8 and eightCounter < 1:
+				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 	eightCounter += 1
+				# if id == 6 and sixCounter < 1:
+				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 	sixCounter += 1
+				# if id == 3 and threeCounter < 1:
+				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 	threeCounter += 1
+
 
 
 			for event in pygame.event.get():
@@ -788,7 +794,67 @@ def main(win, width, ROWS):
 	pygame.quit()
 
 
-main(WIN, SCREENWIDTH, NUMROWS)
+def cameraProcess(nums, mpQueue):
+	net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
+	camera = jetson.utils.gstCamera(1280, 720, "0")
+	
+	truck = [13,28,5] # dx, dy, size 
+	car = [11,15,7]
+
+	while True:
+		img, width, height = camera.CaptureRGBA(zeroCopy=True)
+		detections = net.Detect(img, width, height)
+		if not mpQueue.empty():
+			mpQueue.get()
+			print("Popped extra")
+		
+		print(nums)
+
+		detectionCollection = []
+
+		if len(detections) > 0:
+			for detection in detections:
+				id = detection.ClassID
+				print("ClassID:", id, "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
+				if id == 8 or id == 6 or id ==3:
+					print("DETECTED A VEHICLE - RELEVANT")
+					
+					if id == 8:
+						detectionCollection.append((truck[2],truck[0],truck[1])) #tuple of diamater, x, y
+					if id == 6:
+						detectionCollection.append((car[2],car[0],car[1])) #tuple of diamater, x, y
+					if id == 3:
+						print("ID 3 DETECTION - TRUCK?")
+						detectionCollection.append((truck[2],truck[0],truck[1])) #tuple of diamater, x, y
+
+					
+			mpQueue.put(detectionCollection) # need to put diameter, x, y.
+
+
+		fps = net.GetNetworkFPS()
+
+		jetson.utils.cudaDeviceSynchronize()
+		# create a numpy ndarray that references the CUDA memory it won't be copied, but uses the same memory underneath
+		aimg = jetson.utils.cudaToNumpy(img, width, height, 4)
+		print ("img shape {}".format (aimg.shape))
+		aimg = cv2.cvtColor (aimg.astype (np.uint8), cv2.COLOR_RGBA2BGR)
+		cv2.putText(aimg, "FPS: {}".format(fps), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+		cv2.imshow("image", aimg)
+
+	cv2.destroyAllWindows()
+
+
+import multiprocessing
+
+nums = [1,2,3]
+mpQueue = multiprocessing.Queue()
+camProc = multiprocessing.Process(target=cameraProcess, args=(nums, mpQueue))
+mainProc = multiprocessing.Process(target=main, args=(SCREENWIDTH, NUMROWS, mpQueue))
+
+camProc.start()
+mainProc.start()
+
+
 
 
 		# NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FXIED

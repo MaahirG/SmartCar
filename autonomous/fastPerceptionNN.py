@@ -35,12 +35,17 @@ import cv2
 
 # NEXT STEPS: GET IT SO THAT IT WON'T ALLOW THE SAME CAR/TRUCK TWICE
 
-truck = [13,28,5] # dx, dy, size, detection num 
-car = [11,15,7]
+# truck = [13,28,5] # dx, dy, size, detection num 
+# car = [11,15,7]
 
-# each detection is relative to the previous detection
+# # each detection is relative to the previous detection
 
-# OPENCV DISPLAY
+
+
+
+
+# # OPENCV DISPLAY
+
 net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
 camera = jetson.utils.gstCamera(1280, 720, "0")
 cv2.destroyAllWindows()
@@ -73,3 +78,22 @@ while True:
 # WITHOUT THIS, GST CAMERA AND OPENCV DISPLAY MAY NOT OPEN AGAIN!
 cv2.destroyAllWindows()
 
+
+
+
+
+# import jetson.inference
+# import jetson.utils
+
+# net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
+
+# # camera = jetson.utils.videoSource("/dev/video0")
+# camera = jetson.utils.videoSource("csi://0")
+# # display = jetson.utils.videoOutput(opt.output_URI, argv=sys.argv)
+# display = jetson.utils.videoOutput("display://0") # 'my_video.mp4' for file
+
+# while display.IsStreaming():
+# 	img = camera.Capture()
+# 	detections = net.Detect(img)
+# 	display.Render(img)
+# 	display.SetStatus("Object Detection | Network {:.0f} FPS".format(net.GetNetworkFPS()))import jetson.utils
