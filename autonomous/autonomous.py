@@ -429,7 +429,7 @@ SCREENWIDTH = 800
 
 import time
 def main(width, ROWS, mpQueue):
-
+	time.sleep(15)
 	win = pygame.display.set_mode((SCREENWIDTH, SCREENWIDTH))
 	pygame.display.set_caption("Path Planning")
 
@@ -565,7 +565,6 @@ def main(width, ROWS, mpQueue):
 				# 			node.update_neighbors(grid)
 					
 				# 	xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
-
 
 
 				# if id == 8 or id == 6 or id ==3:
@@ -797,6 +796,7 @@ def main(width, ROWS, mpQueue):
 def cameraProcess(nums, mpQueue):
 	net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
 	camera = jetson.utils.gstCamera(1280, 720, "0")
+	cv2.destroyAllWindows()
 	
 	truck = [13,28,5] # dx, dy, size 
 	car = [11,15,7]
@@ -804,6 +804,7 @@ def cameraProcess(nums, mpQueue):
 	while True:
 		img, width, height = camera.CaptureRGBA(zeroCopy=True)
 		detections = net.Detect(img, width, height)
+
 		if not mpQueue.empty():
 			mpQueue.get()
 			print("Popped extra")
@@ -840,13 +841,14 @@ def cameraProcess(nums, mpQueue):
 		aimg = cv2.cvtColor (aimg.astype (np.uint8), cv2.COLOR_RGBA2BGR)
 		cv2.putText(aimg, "FPS: {}".format(fps), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 		cv2.imshow("image", aimg)
-
-	cv2.destroyAllWindows()
+		if cv2.waitKey(1)==ord('q'):
+			break
 
 
 import multiprocessing
 
 nums = [1,2,3]
+
 mpQueue = multiprocessing.Queue()
 camProc = multiprocessing.Process(target=cameraProcess, args=(nums, mpQueue))
 mainProc = multiprocessing.Process(target=main, args=(SCREENWIDTH, NUMROWS, mpQueue))
