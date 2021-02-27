@@ -4,8 +4,13 @@
 ### Navigating the Repo
 * All autonomous features: Path planning, realtime fast detection with CUDA wrappers and TensorRT, mapping visualization and transformations are found in SmartCar/autonomous 
 * All telerobotics code is found in SmartCar/src/rcProjPkg/src (header files are in SmartCar/src/rcProjPkg/include/rcProjPkg)
+### Prereqs For Autonomous
+* Python 
+* TensorRT
+* Jetson.GPIO
+* Pygame
 
-### Prereqs (Docker container coming soon)
+### Prereqs For Telerobotics (Docker container coming soon)
 * ROS
 * OpenCV
 * CMake
