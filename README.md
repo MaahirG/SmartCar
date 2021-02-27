@@ -4,11 +4,22 @@
 ### Navigating the Repo
 * All autonomous features: Path planning, realtime fast detection with CUDA wrappers and TensorRT, mapping visualization and transformations are found in SmartCar/autonomous 
 * All telerobotics code is found in SmartCar/src/rcProjPkg/src (header files are in SmartCar/src/rcProjPkg/include/rcProjPkg)
-### Prereqs For Autonomous
+
+### Prereqs For Autonomous (Docker container with GPIO, Simulation & Video interface coming soon)
 * Python 
 * TensorRT
 * Jetson.GPIO
 * Pygame
+
+### How to Use (Autonomous):
+```sh
+ON MOBILE ROBOT:
+cd SmartCar/autonomous/
+sudo killall ibus-daemon
+python autonomous.py <-- Occupancy grid simulation and realtime video stream should show up
+Press enter to start planning path and watch the car move!
+Note: Multiprocessing handled for updating occupancy grid/path plan visualization and realtime video stream.
+```
 
 ### Prereqs For Telerobotics (Docker container coming soon)
 * ROS
@@ -17,7 +28,7 @@
 * Host Computer and Mobile Robot Computer
 * USB Controller
 
-### How to Use:
+### How to Use (Telerobotics):
 ```sh
 ON HOST COMPUTER:
 roscore
