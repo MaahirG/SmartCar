@@ -12,7 +12,7 @@
 * Pygame
 
 ### Next Step
-* Publish img frames to a web server to visualize movement realtime in the browser
+* Publish img frames (np array) to a web server to visualize movement realtime in the browser
 * Docker container with GPIO, Simulation & Video interface on mobile robot
 
 ### How to Use (Autonomous):
