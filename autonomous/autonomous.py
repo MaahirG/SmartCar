@@ -367,8 +367,7 @@ def draw_grid(win, rows, screenWidth):
 
 # Draw entire grid, lines and nodes
 def draw(win, grid, rows, screenWidth):
-	win.fill(WHITE)
-	
+	win.fill(WHITE)	
 	for row in grid:
 		for node in row:
 			node.draw(win) # draws individual tiles
@@ -436,7 +435,7 @@ def stopCar(pins):
 	GPIO.output(pins["IN4"],GPIO.LOW)
 
 def main(width, ROWS, mpQueue):
-	time.sleep(5)
+	time.sleep(2)
 	win = pygame.display.set_mode((SCREENWIDTH, SCREENWIDTH))
 	pygame.display.set_caption("Path Planning")
 
@@ -447,13 +446,13 @@ def main(width, ROWS, mpQueue):
 	endCol = 26
 
 	pins = {
-				"ENA" : 32, #PWM
-				"IN1" : 35,
-				"IN2" : 37,
-				"ENB" : 33,
-				"IN3" : 31,
-				"IN4" : 29 #PWM
-			}
+		"ENA" : 32, #PWM
+		"IN1" : 35,
+		"IN2" : 37,
+		"ENB" : 33,
+		"IN3" : 31,
+		"IN4" : 29 #PWM
+	}
 
 	pinList = []
 	GPIO.setmode(GPIO.BOARD)
@@ -610,10 +609,8 @@ def main(width, ROWS, mpQueue):
 						print("TRYING TO CREATE BOUNDARY")
 					if event.key == pygame.K_LEFT:
 						end = movement('straight', end, win, grid, ROWS, width, 1)
-
 					if event.key == pygame.K_DOWN:
 						end = movement('left', end, win, grid, ROWS, width, 1)				
-						
 					if event.key == pygame.K_RIGHT:
 						end = movement('back', end, win, grid, ROWS, width, 1)
 
@@ -625,14 +622,14 @@ def main(width, ROWS, mpQueue):
 					yList = []
 					# row, col of each node in came_from
 					xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
-
+					
 					# if event.key == pygame.K_c:
 					# 	grid = populate_grid(ROWS, width)
-
 
 					# ONLY IF ALGORITHM RUNS --> MEANING THERE WAS A NEW BOUNDARY DETECTION: RUN SPLINE SMOOTHED INTERPOLATED PATH
 					x = np.array(xList)
 					y = np.array(yList)
+
 
 					xe, ye = end.get_pos()
 					xs, ys = start.get_pos()
@@ -656,16 +653,15 @@ def main(width, ROWS, mpQueue):
 						localChangeList.append((rowDiff, colDiff))
 					# visualize and clear lists containing path for next iteration
 					plt.figure()
-					plt.plot(x, y, 'ro', out[0], out[1], 'b')
+				
+					plt.plot(y, x, 'ro', out[1], out[0], 'b')
 					plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
-					plt.axis([min(x)-1, max(x)+1, min(y)-1, max(y)+1])
+					plt.axis([min(y)-1, max(y)+1, max(x)+1, min(x)-1])
+					
 					plt.title('Interpolated Planned Path')
 					plt.show(block=False)
-
 					plt.pause(1)
-					
-					# plt.close()
-
+				
 					mainIter = len(out[0])-1
 					loopIter+=1
 
@@ -853,8 +849,7 @@ mpQueue = multiprocessing.Queue() # communicate between 2 processes
 camProc = multiprocessing.Process(target=cameraProcess, args=([], mpQueue))
 mainProc = multiprocessing.Process(target=main, args=(SCREENWIDTH, NUMROWS, mpQueue))
 mainProc.start()
-# camProc.start()
-
+camProc.start()
 
 
 """
