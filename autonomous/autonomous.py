@@ -518,7 +518,8 @@ def main(width, ROWS, mpQueue):
 
 
 	# realObstacles = [(0.15, 0.4, 1, 9),(-0.45, 0.63, 1, 5), (0.55, 0.8,1,7)] # irlX, irlY, irlRadius, Size 
-	realObstacles = [(0.3, 0.8, 2, 9),(-0.9, 1.26, 2, 5), (1.1, 1.6,2,7)] # irlX, irlY, irlRadius, Size 
+
+	realObstacles = [(0.3, 0.8, 2, 9),(-0.9, 1.26, 2, 5), (1.1, 1.6,2,7)] # irlX, irlY, irlRadius, Size, use this 
 
 	for obstacle in realObstacles:
 		realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadius
@@ -526,6 +527,9 @@ def main(width, ROWS, mpQueue):
 
 		gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
 		gridYEquivalent = abs((ROWS/2)*realRatioY)
+
+		# gridXEquivalent = abs((ROWS)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
+		# gridYEquivalent = abs((ROWS)*realRatioY)
 
 		if obstacle[0] < 0:
 			boundCol = midCoords - gridXEquivalent # columns would decrease
@@ -537,7 +541,7 @@ def main(width, ROWS, mpQueue):
 		elif obstacle[1] > 0: # rows decrease
 			boundRow = midCoords - gridYEquivalent
 		
-		boundaryCreator(obstacle[3], int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+		# boundaryCreator(obstacle[3], int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 
 	metersPerTile = abs(realObstacles[len(realObstacles)-1][0])/gridXEquivalent  # abs(irlX)/gridXEquivalent, irlX of last boundary because gridXEquivalent will be of the last boundary
 	timePerMeter = 1/speed
@@ -550,69 +554,50 @@ def main(width, ROWS, mpQueue):
 	run = True
 	loopIter = 0
 	mainIter = 0
+	buttonClickedToStart = False
+	firstPassStartFindPath = True
 
 	while run:
 		try:
+			print("WHILE RUN ITERATION")
+
 			if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
 				print("YOU CRASHED.")
 
 			grid[midCoords][midCoords].make_start()
 			draw(win, grid, ROWS, width)
 			
-			# Get detections
-			if not mpQueue.empty():
-				detectionCollection = mpQueue.get()
-				print("IN MPQUEUE QUEUE MEANING NOT EMPTY!")
-				for detection in detectionCollection:
-					boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				print("LOOPED DETECTIONS IN mpQueue.get()")
-				# 	for row in grid:
-				# 		for node in row:
-				# 			node.update_neighbors(grid)
-					
-				# 	xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
-
-
-				# if id == 8 or id == 6 or id ==3:
-				# 	print("DETECTED A VEHICLE")
-				# 	if numDetections = 0:
-				# 		boundaryCreator(truck[2], truck[0], truck[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 		numDetections += 1
-				# 	elif numDetections = 1:
-				# 		boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 		numDetections += 1
-				# 	else
-				# 		print("Already detected!")
-				# 		break
-					
-				# if id == 8 and eightCounter < 1:
-				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 	eightCounter += 1
-				# if id == 6 and sixCounter < 1:
-				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 	sixCounter += 1
-				# if id == 3 and threeCounter < 1:
-				# 	boundaryCreator(car[2], car[0], car[1], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 	threeCounter += 1
-
-
-
 			for event in pygame.event.get():
+				if event.type == pygame.KEYDOWN:
+					buttonClickedToStart = True
 				if event.type == pygame.QUIT:
-					run = False
-				
-				# if some detection - run algorithm
-				if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
-					if event.key == pygame.K_UP:
-						# end = movement('right', end, win, grid, ROWS, width, 1)
-						boundaryCreator(3, 11, 15, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-						print("TRYING TO CREATE BOUNDARY")
-					if event.key == pygame.K_LEFT:
-						end = movement('straight', end, win, grid, ROWS, width, 1)
-					if event.key == pygame.K_DOWN:
-						end = movement('left', end, win, grid, ROWS, width, 1)				
-					if event.key == pygame.K_RIGHT:
-						end = movement('back', end, win, grid, ROWS, width, 1)
+					run = False	
+
+			# Get detections from perception
+			if buttonClickedToStart:
+				if not mpQueue.empty() or firstPassStartFindPath:
+					detectionCollection = []
+					while not mpQueue.empty():
+						detectionCollection = mpQueue.get() # only new detections (filtered in camera process)
+						print("IN MULTIPROCESSING QUEUE MEANING NOT EMPTY!")
+						for detection in detectionCollection:
+							boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+						print("LOOPED DETECTIONS IN mpQueue.get()")
+					
+
+				# for event in pygame.event.get():
+				# 	if event.type == pygame.QUIT:
+				# 		run = False				
+				# 	if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
+				# 		if event.key == pygame.K_UP:
+				# 			boundaryCreator(3, 11, 15, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+				# 			print("TRYING TO CREATE BOUNDARY")
+				# 		if event.key == pygame.K_LEFT:
+				# 			end = movement('straight', end, win, grid, ROWS, width, 1)
+				# 		if event.key == pygame.K_DOWN:
+				# 			end = movement('left', end, win, grid, ROWS, width, 1)				
+				# 		if event.key == pygame.K_RIGHT:
+				# 			end = movement('back', end, win, grid, ROWS, width, 1)
 
 					for row in grid:
 						for node in row:
@@ -630,7 +615,6 @@ def main(width, ROWS, mpQueue):
 					x = np.array(xList)
 					y = np.array(yList)
 
-
 					xe, ye = end.get_pos()
 					xs, ys = start.get_pos()
 					dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
@@ -644,6 +628,7 @@ def main(width, ROWS, mpQueue):
 					u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
 					out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows, out[1] = cols
 					print("INTERPOLATED ORIGINAL ARRAY SIZE: ", len(out[0]))
+
 					localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
 					for i in range(len(out[0])-1):
 						# out[0][0] is the last interpolated value (farthest from ego position)
@@ -651,24 +636,31 @@ def main(width, ROWS, mpQueue):
 						rowDiff = out[0][i]-out[0][i+1]	# Note, this order will allow O(N) pop() later on for the first ego position.
 						colDiff = out[1][i]-out[1][i+1]	
 						localChangeList.append((rowDiff, colDiff))
+					
 					# visualize and clear lists containing path for next iteration
 					plt.figure()
-				
 					plt.plot(y, x, 'ro', out[1], out[0], 'b')
 					plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
 					plt.axis([min(y)-1, max(y)+1, max(x)+1, min(x)-1])
-					
 					plt.title('Interpolated Planned Path')
 					plt.show(block=False)
 					plt.pause(1)
 				
 					mainIter = len(out[0])-1
 					loopIter+=1
+					firstPassStartFindPath = False
+			else:
+				print("Press any button to start autonomous driving")
+				continue
 
 			# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
-			# IF NO DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
+			# IF NO NEW DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
+			
+			# NOTE THE INCREMENTAL MOVEMENTS OF THE CAR HAPPEN IN SEPARATE WHILE LOOP ITERATIONS, THE WHILE RUN HAPPENS AFTER EVERY INCREMENTAL MOVEMENT
+			# THIS MEANS IF WE HAVE A NEW DETECTION WE CAN CHANGE THE PATH ON THE FLY!
 			
 			iteration = len(xList)-1 # xList[iteration] would give: the closest to egopose from came_from[]
+
 
 			if loopIter == 0: # algorithm hasn't run yet.
 				continue
@@ -702,7 +694,6 @@ def main(width, ROWS, mpQueue):
 				print("You made it!")
 				break
 
-
 			# need to see how much is overlapped from xList and yList to the movement happening in spline.
 			# max of rowDiff and colDiff takes precedence - shot caller
 			# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
@@ -723,12 +714,12 @@ def main(width, ROWS, mpQueue):
 			distance = math.sqrt(rowDiffClosestToEgo**2 + colDiffClosestToEgo**2)
 			desiredAngle = (int)((math.atan2(colDiffClosestToEgo,rowDiffClosestToEgo) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
 			
-			nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) # difference between the two next came_from points 		shotCaller = abs(rowDiff) + abs(colDiff)
+			nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) # difference between the two next came_from points
 			dir = ''
 			shotCaller = abs(rowDiffClosestToEgo) + abs(rowDiffClosestToEgo)
 
 			if abs(curAngle - desiredAngle) > 10:
-				# then only stop motors and readjust.
+				# only then stop motors and readjust
 				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
 				stopCar(pins)
 				time.sleep(0.1)
@@ -744,6 +735,7 @@ def main(width, ROWS, mpQueue):
 			moveCar(pins)
 			timer = time.clock()		
 			
+			# shotCaller is a larger number than nextAddition, nextAdditions are smaller movements that make up shotCaller
 			while shotCaller - nextAddition > 0 and iteration > 0:	# distance away from 0			
 
 				# incase car goes over 'travelTime' inside loop.
@@ -801,37 +793,29 @@ def cameraProcess(n, mpQueue):
 	camera = jetson.utils.gstCamera(1280, 720, "0")
 	cv2.destroyAllWindows()
 	
-	truck = [13,28,5] # dx, dy, size 
-	car = [11,15,7]
+	truck = [5,13,28] # size, dx, dy 
+	car = [7,11,15]
+	seenDetections = { 8:[0,truck], 6:[0,car], 3:[0,truck] }
 
 	while True:
 		img, width, height = camera.CaptureRGBA(zeroCopy=True)
 		detections = net.Detect(img, width, height)
 
-		if not mpQueue.empty():
-			mpQueue.get()
-			print("Popped extra")
-		
 		detectionCollection = []
-
+		
 		if len(detections) > 0:
 			for detection in detections:
 				id = detection.ClassID
-				print("ClassID:", id, "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
-				if id == 8 or id == 6 or id ==3:
+				if id in seenDetections.keys():
 					print("DETECTED A VEHICLE - RELEVANT")
-					
-					if id == 8:
-						detectionCollection.append((truck[2],truck[0],truck[1])) #tuple of diamater, x, y
-					if id == 6:
-						detectionCollection.append((car[2],car[0],car[1])) #tuple of diamater, x, y
-					if id == 3:
-						print("ID 3 DETECTION - TRUCK?")
-						detectionCollection.append((truck[2],truck[0],truck[1])) #tuple of diamater, x, y
-
-					
-			mpQueue.put(detectionCollection) # need to put diameter, x, y.
-
+					if seenDetections[id][0] == 0:
+						detect = seenDetections[id][1]
+						detectionCollection.append((detect[0],detect[1],detect[2])) #tuple of diamater, x, y
+						seenDetections[id][0] = 1
+						print("ClassID:", id , "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
+						mpQueue.put(detectionCollection) # need to put diameter, x, y.
+					else:
+						print("Already tracking this detection.")					
 
 		fps = net.GetNetworkFPS()
 
