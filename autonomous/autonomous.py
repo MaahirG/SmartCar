@@ -558,194 +558,116 @@ def main(width, ROWS, mpQueue):
 	firstPassStartFindPath = True
 
 	while run:
-		try:
-			print("WHILE RUN ITERATION")
+		# print("WHILE RUN ITERATION")
 
-			if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
-				print("YOU CRASHED.")
+		if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
+			print("YOU CRASHED.")
 
-			grid[midCoords][midCoords].make_start()
-			draw(win, grid, ROWS, width)
-			
-			for event in pygame.event.get():
-				if event.type == pygame.KEYDOWN:
-					buttonClickedToStart = True
-				if event.type == pygame.QUIT:
-					run = False	
-
-			# Get detections from perception
-			if buttonClickedToStart:
-				if not mpQueue.empty() or firstPassStartFindPath:
-					detectionCollection = []
-					while not mpQueue.empty():
-						detectionCollection = mpQueue.get() # only new detections (filtered in camera process)
-						print("IN MULTIPROCESSING QUEUE MEANING NOT EMPTY!")
-						for detection in detectionCollection:
-							boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-						print("LOOPED DETECTIONS IN mpQueue.get()")
-					
-
-				# for event in pygame.event.get():
-				# 	if event.type == pygame.QUIT:
-				# 		run = False				
-				# 	if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
-				# 		if event.key == pygame.K_UP:
-				# 			boundaryCreator(3, 11, 15, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
-				# 			print("TRYING TO CREATE BOUNDARY")
-				# 		if event.key == pygame.K_LEFT:
-				# 			end = movement('straight', end, win, grid, ROWS, width, 1)
-				# 		if event.key == pygame.K_DOWN:
-				# 			end = movement('left', end, win, grid, ROWS, width, 1)				
-				# 		if event.key == pygame.K_RIGHT:
-				# 			end = movement('back', end, win, grid, ROWS, width, 1)
-
-					for row in grid:
-						for node in row:
-							node.update_neighbors(grid)
-					
-					xList = []
-					yList = []
-					# row, col of each node in came_from
-					xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
-					
-					# if event.key == pygame.K_c:
-					# 	grid = populate_grid(ROWS, width)
-
-					# ONLY IF ALGORITHM RUNS --> MEANING THERE WAS A NEW BOUNDARY DETECTION: RUN SPLINE SMOOTHED INTERPOLATED PATH
-					x = np.array(xList)
-					y = np.array(yList)
-
-					xe, ye = end.get_pos()
-					xs, ys = start.get_pos()
-					dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
-
-					if dist < 15:
-						thresh = (int)(ROWS*0.15) # too many points to try and map to the path with not much movement means choppy turns - so restrict it.
-					else:
-						thresh = (int)(ROWS*0.25)
-
-					tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
-					u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
-					out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows, out[1] = cols
-					print("INTERPOLATED ORIGINAL ARRAY SIZE: ", len(out[0]))
-
-					localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
-					for i in range(len(out[0])-1):
-						# out[0][0] is the last interpolated value (farthest from ego position)
-						# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
-						rowDiff = out[0][i]-out[0][i+1]	# Note, this order will allow O(N) pop() later on for the first ego position.
-						colDiff = out[1][i]-out[1][i+1]	
-						localChangeList.append((rowDiff, colDiff))
-					
-					# visualize and clear lists containing path for next iteration
-					plt.figure()
-					plt.plot(y, x, 'ro', out[1], out[0], 'b')
-					plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
-					plt.axis([min(y)-1, max(y)+1, max(x)+1, min(x)-1])
-					plt.title('Interpolated Planned Path')
-					plt.show(block=False)
-					plt.pause(1)
-				
-					mainIter = len(out[0])-1
-					loopIter+=1
-					firstPassStartFindPath = False
-			else:
-				print("Press any button to start autonomous driving")
-				continue
-
-			# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
-			# IF NO NEW DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
-			
-			# NOTE THE INCREMENTAL MOVEMENTS OF THE CAR HAPPEN IN SEPARATE WHILE LOOP ITERATIONS, THE WHILE RUN HAPPENS AFTER EVERY INCREMENTAL MOVEMENT
-			# THIS MEANS IF WE HAVE A NEW DETECTION WE CAN CHANGE THE PATH ON THE FLY!
-			
-			iteration = len(xList)-1 # xList[iteration] would give: the closest to egopose from came_from[]
-
-
-			if loopIter == 0: # algorithm hasn't run yet.
-				continue
-			elif len(localChangeList) == 0: # deplete localChangeList which is the spline point to point updates - may still be left overs in xList because of the shotcaller - nextAddition, so just go through the remaining 
-				while iteration > 0:
-					# this part is just for the visual - filling in the remaining movement() for the end points and boundaries
-					nodeX, nodeY = xList[iteration], yList[iteration]
-					nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
-					
-					if nextNodeX-nodeX > 0:
-						dir = 'left'
-					elif nextNodeX-nodeX < 0:
-						dir = 'right'
-					elif nextNodeY-nodeY > 0:
-						dir = 'back'
-					elif nextNodeY-nodeY < 0:
-						dir = 'straight'
-					else:
-						dir = '' 
-					
-					end = movement(dir, end, win, grid, ROWS, width, 1)
-					print("end pos:" , end.get_pos())
-					xList.pop()
-					yList.pop()			
-					iteration -= 1
-
-				
-				xList.pop()
-				yList.pop()
-
-				print("You made it!")
-				break
-
-			# need to see how much is overlapped from xList and yList to the movement happening in spline.
-			# max of rowDiff and colDiff takes precedence - shot caller
-			# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
-			# ex. max()--> 2.392, if max was col --> look in yList, else look in xList, pop() and subtract till max is almost reached
-			# if you subtract and pop one more time, will it be a greater distance from 0 than if you left it? --> if yes, leave it--> that's where end is.
-
-			# xList[0] has the row position of start tile
-			# difference between consecutive xList vals
-			# goal: does shotcaller benefit from adding another xList val or does it get further awawy from 0?
-
-			# infoTuple indexing: X,Y,MAG,ANGLE
-			infoTuple = localChangeList[len(localChangeList)-1] # gives closest one to the ego vehicle
-			# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
-			rowDiffClosestToEgo = infoTuple[0]
-			colDiffClosestToEgo = infoTuple[1]
-
-			# computed for each subset of spline that is a subpath
-			distance = math.sqrt(rowDiffClosestToEgo**2 + colDiffClosestToEgo**2)
-			desiredAngle = (int)((math.atan2(colDiffClosestToEgo,rowDiffClosestToEgo) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
-			
-			nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) # difference between the two next came_from points
-			dir = ''
-			shotCaller = abs(rowDiffClosestToEgo) + abs(rowDiffClosestToEgo)
-
-			if abs(curAngle - desiredAngle) > 10:
-				# only then stop motors and readjust
-				print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
-				stopCar(pins)
-				time.sleep(0.1)
-
-				getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
+		grid[midCoords][midCoords].make_start()
+		draw(win, grid, ROWS, width)
 		
-			# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
-			curAngle = desiredAngle # update anyways to protect for incremental error
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				buttonClickedToStart = True
+			if event.type == pygame.QUIT:
+				run = False	
 
-			travelTime = distance*timePerTile # tiles*time/tile
-			print("TRAVELTIME", travelTime)
-
-			moveCar(pins)
-			timer = time.clock()		
-			
-			# shotCaller is a larger number than nextAddition, nextAdditions are smaller movements that make up shotCaller
-			while shotCaller - nextAddition > 0 and iteration > 0:	# distance away from 0			
-
-				# incase car goes over 'travelTime' inside loop.
-				if (time.clock() - timer) > travelTime:
-					stopCar(pins)
-					print("STOPPED CAUGHT IN WHILE LOOP", (time.clock()-timer))
-
-				# don't count this part as taking much time - just set teh motors going in desired direction and time.sleep(calcTime) after.
-				shotCaller -= nextAddition
+		# Get detections from perception
+		if buttonClickedToStart:
+			if not mpQueue.empty() or firstPassStartFindPath:
+				detectionCollection = []
+				while not mpQueue.empty():
+					detectionCollection = mpQueue.get() # only new detections (filtered in camera process)
+					print("IN MULTIPROCESSING QUEUE MEANING NOT EMPTY!")
+					for detection in detectionCollection:
+						boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+					print("LOOPED DETECTIONS IN mpQueue.get()")
 				
+
+			# for event in pygame.event.get():
+			# 	if event.type == pygame.QUIT:
+			# 		run = False				
+			# 	if event.type == pygame.KEYDOWN:	# https://www.programcreek.com/python/example/5891/pygame.K_LEFT
+			# 		if event.key == pygame.K_UP:
+			# 			boundaryCreator(3, 11, 15, 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+			# 			print("TRYING TO CREATE BOUNDARY")
+			# 		if event.key == pygame.K_LEFT:
+			# 			end = movement('straight', end, win, grid, ROWS, width, 1)
+			# 		if event.key == pygame.K_DOWN:
+			# 			end = movement('left', end, win, grid, ROWS, width, 1)				
+			# 		if event.key == pygame.K_RIGHT:
+			# 			end = movement('back', end, win, grid, ROWS, width, 1)
+
+				for row in grid:
+					for node in row:
+						node.update_neighbors(grid)
+				
+				draw(win, grid, ROWS, width)
+
+				xList = []
+				yList = []
+				# row, col of each node in came_from
+				xList, yList = algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end, xList, yList)
+				
+				# if event.key == pygame.K_c:
+				# 	grid = populate_grid(ROWS, width)
+
+				# ONLY IF ALGORITHM RUNS --> MEANING THERE WAS A NEW BOUNDARY DETECTION: RUN SPLINE SMOOTHED INTERPOLATED PATH
+				x = np.array(xList)
+				y = np.array(yList)
+
+				xe, ye = end.get_pos()
+				xs, ys = start.get_pos()
+				dist = math.sqrt(abs(xs-xe)**2 + abs(ys-ye)**2)
+
+				if dist < 15:
+					thresh = (int)(ROWS*0.15) # too many points to try and map to the path with not much movement means choppy turns - so restrict it.
+				else:
+					thresh = (int)(ROWS*0.25)
+
+				tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
+				u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
+				out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows, out[1] = cols
+				print("INTERPOLATED ORIGINAL ARRAY SIZE: ", len(out[0]))
+
+				localChangeList = []	# list of tuples, [0][0] is local X changes, [0][1] is local Y changes
+				for i in range(len(out[0])-1):
+					# out[0][0] is the last interpolated value (farthest from ego position)
+					# if out x val(rows) is decreasing: car is going right, call: movement(right) --> boundary moves left though
+					rowDiff = out[0][i]-out[0][i+1]	# Note, this order will allow O(N) pop() later on for the first ego position.
+					colDiff = out[1][i]-out[1][i+1]	
+					localChangeList.append((rowDiff, colDiff))
+				
+				# visualize and clear lists containing path for next iteration
+				plt.figure()
+				plt.plot(y, x, 'ro', out[1], out[0], 'b')
+				plt.legend(['Points', 'Interpolated B-spline', 'True'],loc='best')
+				plt.axis([min(y)-1, max(y)+1, max(x)+1, min(x)-1])
+				plt.title('Interpolated Planned Path')
+				plt.show(block=False)
+				plt.pause(1)
+			
+				mainIter = len(out[0])-1
+				loopIter+=1
+				firstPassStartFindPath = False
+		else:
+			print("Press any button to start autonomous driving")
+			continue
+
+		# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
+		# IF NO NEW DETECTION OCCURS, THE WHILE RUN LOOP WILL JUMP TO HERE!
+		
+		# NOTE THE INCREMENTAL MOVEMENTS OF THE CAR HAPPEN IN SEPARATE WHILE LOOP ITERATIONS, THE WHILE RUN HAPPENS AFTER EVERY INCREMENTAL MOVEMENT
+		# THIS MEANS IF WE HAVE A NEW DETECTION WE CAN CHANGE THE PATH ON THE FLY!
+		
+		iteration = len(xList)-1 # xList[iteration] would give: the closest to egopose from came_from[]
+
+
+		if loopIter == 0: # algorithm hasn't run yet.
+			continue
+		elif len(localChangeList) == 0: # deplete localChangeList which is the spline point to point updates - may still be left overs in xList because of the shotcaller - nextAddition, so just go through the remaining 
+			while iteration > 0:
+				# this part is just for the visual - filling in the remaining movement() for the end points and boundaries
 				nodeX, nodeY = xList[iteration], yList[iteration]
 				nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
 				
@@ -760,30 +682,109 @@ def main(width, ROWS, mpQueue):
 				else:
 					dir = '' 
 				
-				# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
 				end = movement(dir, end, win, grid, ROWS, width, 1)
-				print("End pos:", end.get_pos())
+				print("end pos:" , end.get_pos())
 				xList.pop()
-				yList.pop()
-				
-				iteration = iteration-1
-				if iteration > 0:
-					nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
-				# time.sleep(0.5) # MAP TO VELOCITY OF CAR 
-			
-			print("Visualization Mapping Time:", time.clock()-timer)
-			while (time.clock() - timer) < travelTime:
-				# print("Still Moving", time.clock()-timer)
-				continue
-			
+				yList.pop()			
+				iteration -= 1
 
-			print("DIST JUST TRAVELLED:", distance, "@DESIRED ANGLE", desiredAngle, "\n")
-			# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
-			mainIter -= 1
-			localChangeList.pop()
+			
+			xList.pop()
+			yList.pop()
+
+			print("You made it!")
+			break
+
+		# need to see how much is overlapped from xList and yList to the movement happening in spline.
+		# max of rowDiff and colDiff takes precedence - shot caller
+		# see how far max of ^ would take us in the xList,yList (camefrom subset) and just pop() until you get there.
+		# ex. max()--> 2.392, if max was col --> look in yList, else look in xList, pop() and subtract till max is almost reached
+		# if you subtract and pop one more time, will it be a greater distance from 0 than if you left it? --> if yes, leave it--> that's where end is.
+
+		# xList[0] has the row position of start tile
+		# difference between consecutive xList vals
+		# goal: does shotcaller benefit from adding another xList val or does it get further awawy from 0?
+
+		# infoTuple indexing: X,Y,MAG,ANGLE
+		infoTuple = localChangeList[len(localChangeList)-1] # gives closest one to the ego vehicle
+		# for efficiency, do the computations here because you might not need the whole list if algorithm runs again
+		rowDiffClosestToEgo = infoTuple[0]
+		colDiffClosestToEgo = infoTuple[1]
+
+		# computed for each subset of spline that is a subpath
+		distance = math.sqrt(rowDiffClosestToEgo**2 + colDiffClosestToEgo**2)
+		desiredAngle = (int)((math.atan2(colDiffClosestToEgo,rowDiffClosestToEgo) * 180 / math.pi)+360) % 360 	# get angle between 0-360 instead of (-pi to pi)
 		
-		finally:
-			print("CLEANUP GPIO")
+		nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) # difference between the two next came_from points
+		dir = ''
+		shotCaller = abs(rowDiffClosestToEgo) + abs(rowDiffClosestToEgo)
+
+		if abs(curAngle - desiredAngle) > 10:
+			# only then stop motors and readjust
+			print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
+			stopCar(pins)
+			time.sleep(0.1)
+
+			getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
+	
+		# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
+		curAngle = desiredAngle # update anyways to protect for incremental error
+
+		travelTime = distance*timePerTile # tiles*time/tile
+		print("TRAVELTIME", travelTime)
+
+		moveCar(pins)
+		timer = time.clock()		
+		
+		# shotCaller is a larger number than nextAddition, nextAdditions are smaller movements that make up shotCaller
+		while shotCaller - nextAddition > 0 and iteration > 0:	# distance away from 0			
+
+			# incase car goes over 'travelTime' inside loop.
+			if (time.clock() - timer) > travelTime:
+				stopCar(pins)
+				print("STOPPED CAUGHT IN WHILE LOOP", (time.clock()-timer))
+
+			# don't count this part as taking much time - just set teh motors going in desired direction and time.sleep(calcTime) after.
+			shotCaller -= nextAddition
+			
+			nodeX, nodeY = xList[iteration], yList[iteration]
+			nextNodeX, nextNodeY = xList[iteration-1], yList[iteration-1]
+			
+			if nextNodeX-nodeX > 0:
+				dir = 'left'
+			elif nextNodeX-nodeX < 0:
+				dir = 'right'
+			elif nextNodeY-nodeY > 0:
+				dir = 'back'
+			elif nextNodeY-nodeY < 0:
+				dir = 'straight'
+			else:
+				dir = '' 
+			
+			# the way the algorithm is written, the came_from list will contain the immediately adjacent tile (meaning 1 tile move in 1 direction only)
+			end = movement(dir, end, win, grid, ROWS, width, 1)
+			print("End pos:", end.get_pos())
+			xList.pop()
+			yList.pop()
+			
+			iteration = iteration-1
+			if iteration > 0:
+				nextAddition = abs(xList[iteration]-xList[iteration-1]) + abs(yList[iteration]-yList[iteration-1]) #always going to be 1
+			# time.sleep(0.5) # MAP TO VELOCITY OF CAR 
+		
+		print("Visualization Mapping Time:", time.clock()-timer)
+		while (time.clock() - timer) < travelTime:
+			# print("Still Moving", time.clock()-timer)
+			continue
+		
+
+		print("DIST JUST TRAVELLED:", distance, "@DESIRED ANGLE", desiredAngle, "\n")
+		# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
+		mainIter -= 1
+		localChangeList.pop()
+		
+		# finally:
+			# print("CLEANUP GPIO")
 			# GPIO.cleanup()
 
 	pygame.quit()
@@ -792,10 +793,11 @@ def cameraProcess(n, mpQueue):
 	net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
 	camera = jetson.utils.gstCamera(1280, 720, "0")
 	cv2.destroyAllWindows()
-	
+
 	truck = [5,13,28] # size, dx, dy 
 	car = [7,11,15]
-	seenDetections = { 8:[0,truck], 6:[0,car], 3:[0,truck] }
+	pedestrian = []
+	seenDetections = { -1:[0,pedestrian], 8:[0,truck], 3:[0,car] } # person is ID 6
 
 	while True:
 		img, width, height = camera.CaptureRGBA(zeroCopy=True)
@@ -815,14 +817,14 @@ def cameraProcess(n, mpQueue):
 						print("ClassID:", id , "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
 						mpQueue.put(detectionCollection) # need to put diameter, x, y.
 					else:
-						print("Already tracking this detection.")					
+						print("Already tracking this detection.", id)					
 
 		fps = net.GetNetworkFPS()
 
 		jetson.utils.cudaDeviceSynchronize()
 		# create a numpy ndarray that references the CUDA memory it won't be copied, but uses the same memory underneath
 		aimg = jetson.utils.cudaToNumpy(img, width, height, 4)
-		print ("img shape {}".format (aimg.shape))
+		# print ("img shape {}".format (aimg.shape))
 		aimg = cv2.cvtColor (aimg.astype (np.uint8), cv2.COLOR_RGBA2BGR)
 		cv2.putText(aimg, "FPS: {}".format(fps), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 		cv2.imshow("image", aimg)
@@ -833,8 +835,8 @@ mpQueue = multiprocessing.Queue() # communicate between 2 processes
 camProc = multiprocessing.Process(target=cameraProcess, args=([], mpQueue))
 mainProc = multiprocessing.Process(target=main, args=(SCREENWIDTH, NUMROWS, mpQueue))
 mainProc.start()
+time.sleep(3)
 camProc.start()
-
 
 """
 NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FIXED
