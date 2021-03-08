@@ -50,6 +50,10 @@ MIDCOORDS = math.ceil(NUMROWS/2) - 1
 
 BOUNDARYCENTRES = {}
 
+experimentalZeroTurnTime = 12 # experimental
+speed = 0.27 # 100% motor speed/duty cycle in meters/second
+curAngle = 180 # default for the car pointing in the forward (left, -x) direction
+
 class Node:
 	def __init__(self, row, col, tileWidth, total_rows, state):
 		self.row = row
@@ -406,7 +410,7 @@ def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
 	turnTime = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)
 	if (desiredAngle > curAngle):
 		print("ZEROTURN LEFT FOR TIME:", turnTime)
-		GPIO.output(pins["IN1"],GPIO.HIGH)		# in1 is right side of car
+		GPIO.output(pins["IN1"],GPIO.HIGH)		# in1 & in2 are right side of car both together mean direction
 		GPIO.output(pins["IN2"],GPIO.LOW)
 		GPIO.output(pins["IN3"],GPIO.LOW)
 		GPIO.output(pins["IN4"],GPIO.LOW)
@@ -435,7 +439,7 @@ def stopCar(pins):
 	GPIO.output(pins["IN4"],GPIO.LOW)
 
 def main(width, ROWS, mpQueue):
-	time.sleep(2)
+	time.sleep(0.5)
 	win = pygame.display.set_mode((SCREENWIDTH, SCREENWIDTH))
 	pygame.display.set_caption("Path Planning")
 
@@ -463,8 +467,8 @@ def main(width, ROWS, mpQueue):
 	GPIO.setup(pinList, GPIO.OUT, initial=GPIO.LOW) #INIT WITH MOTORS STOPPED
 	APWM = GPIO.PWM(pins["ENA"],50) # Frequency 100 cycles per second
 	BPWM = GPIO.PWM(pins["ENB"],50) 
-	# APWM.start(100) # Duty Cycle
-	# BPWM.start(100)
+	APWM.start(100) # Duty Cycle
+	BPWM.start(100)
 
 	grid[midCoords][midCoords].make_start()
 	grid[endRow][endCol].make_end()
@@ -481,10 +485,8 @@ def main(width, ROWS, mpQueue):
 			temp.append(node.state)
 		temp = []
 
-	truck = [13,28,5] # dx, dy, size, detection num 
-	car = [11,15,7]
-	# each detection is relative to the previous detection
 
+	# each detection is relative to the previous detection
 
 	# v = d/t --> get a set velocity and now you can always get the time to travel any distance (t = d/v)
 	# map the actual ruler distance to the first reference obstacle to the mapsize
@@ -512,43 +514,38 @@ def main(width, ROWS, mpQueue):
 	# irlRadius = 1
 	# Size = 9
 	# OG: zeroturntime = 7, speed = 0.6
-	experimentalZeroTurnTime = 10 # experimental
-	speed = 0.6 # 100% motor speed/duty cycle in meters/second
-	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
-
 
 	# realObstacles = [(0.15, 0.4, 1, 9),(-0.45, 0.63, 1, 5), (0.55, 0.8,1,7)] # irlX, irlY, irlRadius, Size 
+	# realObstacles = [(0.3, 0.8, 2, 9),(-0.9, 1.26, 2, 5), (1.1, 1.6,2,7)] # irlX, irlY, irlRadius, Size, use this 
 
-	realObstacles = [(0.3, 0.8, 2, 9),(-0.9, 1.26, 2, 5), (1.1, 1.6,2,7)] # irlX, irlY, irlRadius, Size, use this 
+	# Testing on red table
+	# realObstacles = [(0.3, 0.4, 0.5, 1, 5), (0.3, 0.2, 0.5, 1, 7)] # irlX, irlY, irlRadiusX, irlRadiusY, Size, use this 
 
-	for obstacle in realObstacles:
-		realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadius
-		realRatioY = obstacle[1]/obstacle[2] # irlY/irlRadius --> Approximate row length of the longest sides of the actual human sized car grid.
+	# for obstacle in realObstacles:
+	# 	realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadiusX
+	# 	realRatioY = obstacle[1]/obstacle[3] # irlY/irlRadiusY --> Approximate row length of the longest sides of the actual human sized car grid.
 
-		gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
-		gridYEquivalent = abs((ROWS/2)*realRatioY)
+	# 	gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
+	# 	gridYEquivalent = abs((ROWS/2)*realRatioY)
 
-		# gridXEquivalent = abs((ROWS)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
-		# gridYEquivalent = abs((ROWS)*realRatioY)
-
-		if obstacle[0] < 0:
-			boundCol = midCoords - gridXEquivalent # columns would decrease
-		elif obstacle[0] > 0: # columns increase
-			boundCol = midCoords + gridXEquivalent
+	# 	if obstacle[0] < 0:
+	# 		boundCol = midCoords - gridXEquivalent # columns would decrease
+	# 	elif obstacle[0] > 0: # columns increase
+	# 		boundCol = midCoords + gridXEquivalent
 		
-		if obstacle[1] < 0:
-			boundRow = midCoords + gridYEquivalent # rows would increase
-		elif obstacle[1] > 0: # rows decrease
-			boundRow = midCoords - gridYEquivalent
+	# 	if obstacle[1] < 0:
+	# 		boundRow = midCoords + gridYEquivalent # rows would increase
+	# 	elif obstacle[1] > 0: # rows decrease
+	# 		boundRow = midCoords - gridYEquivalent
 		
-		# boundaryCreator(obstacle[3], int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+	# 	boundaryCreator(obstacle[4], int(boundRow), int(boundCol), 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 
-	metersPerTile = abs(realObstacles[len(realObstacles)-1][0])/gridXEquivalent  # abs(irlX)/gridXEquivalent, irlX of last boundary because gridXEquivalent will be of the last boundary
-	timePerMeter = 1/speed
-	timePerTile = timePerMeter*metersPerTile
-	print("TIME PER TILE", timePerTile)
-	print("METERS PER TILE", metersPerTile)
-	print("TIME PER METER", timePerMeter)
+	# metersPerTile = abs(realObstacles[len(realObstacles)-1][0])/gridXEquivalent  # abs(irlX)/gridXEquivalent, irlX of last boundary because gridXEquivalent will be of the last boundary
+	# timePerMeter = 1/speed
+	# timePerTile = timePerMeter*metersPerTile
+	# print("TIME PER TILE", timePerTile)
+	# print("METERS PER TILE", metersPerTile)
+	# print("TIME PER METER", timePerMeter)
 
 	numDetections = 0
 	run = True
@@ -557,8 +554,13 @@ def main(width, ROWS, mpQueue):
 	buttonClickedToStart = False
 	firstPassStartFindPath = True
 
+	experimentalZeroTurnTime = 12 # experimental
+	speed = 0.27 # 100% motor speed/duty cycle in meters/second
+	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
+
+	timePerTile = 0.2
+
 	while run:
-		# print("WHILE RUN ITERATION")
 
 		if grid[midCoords][midCoords].get_state() == OBSTACLESTATE:
 			print("YOU CRASHED.")
@@ -575,15 +577,14 @@ def main(width, ROWS, mpQueue):
 		# Get detections from perception
 		if buttonClickedToStart:
 			if not mpQueue.empty() or firstPassStartFindPath:
-				detectionCollection = []
+				stopCar(pins)
 				while not mpQueue.empty():
-					detectionCollection = mpQueue.get() # only new detections (filtered in camera process)
+					detection = mpQueue.get() # only new detections (filtered in camera process)
 					print("IN MULTIPROCESSING QUEUE MEANING NOT EMPTY!")
-					for detection in detectionCollection:
-						boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
+					timePerTile = detection[3]
+					boundaryCreator(detection[0], detection[1], detection[2], 0, win, grid, ROWS, width) #(diameter, x, y, cleanup, win, grid, rows, width)
 					print("LOOPED DETECTIONS IN mpQueue.get()")
-				
-
+					
 			# for event in pygame.event.get():
 			# 	if event.type == pygame.QUIT:
 			# 		run = False				
@@ -625,7 +626,7 @@ def main(width, ROWS, mpQueue):
 				else:
 					thresh = (int)(ROWS*0.25)
 
-				tck,u = interpolate.splprep([x,y],k=3,s=0) # returns tuple and array
+				tck,u = interpolate.splprep([x,y],k=2,s=0) # returns tuple and array
 				u=np.linspace(0,1,num=thresh,endpoint=True) # num is the number of entries the spline will try and map onto the graph, if you have more rows, you want more points when interpolating to make the model better fit
 				out = interpolate.splev(u,tck) # 'out' is the interpolated array of new row,col positions out[0] = rows, out[1] = cols
 				print("INTERPOLATED ORIGINAL ARRAY SIZE: ", len(out[0]))
@@ -651,7 +652,7 @@ def main(width, ROWS, mpQueue):
 				loopIter+=1
 				firstPassStartFindPath = False
 		else:
-			print("Press any button to start autonomous driving")
+			# print("Press any button to start autonomous driving")
 			continue
 
 		# AFTER RUNNING ALGORITHM, YOU HAVE THE MOST UP TO DATE DATA ABOUT BOUNDARIES, PATH (SMOOTHED), ALL NODE STATUS		
@@ -723,8 +724,7 @@ def main(width, ROWS, mpQueue):
 			# only then stop motors and readjust
 			print("STOP AND GET CAR TO ANGLE - BIG ANGLE CHANGE", curAngle, desiredAngle)
 			stopCar(pins)
-			time.sleep(0.1)
-
+			time.sleep(0.2)
 			getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins) # map difference to a time: (curCarAngle - desiredAngle) # have experimental time for full turn
 	
 		# Else don't stop the motors, the trajectory is fine - this is here because one straighht line might be split into multiple splines
@@ -776,7 +776,6 @@ def main(width, ROWS, mpQueue):
 		while (time.clock() - timer) < travelTime:
 			# print("Still Moving", time.clock()-timer)
 			continue
-		
 
 		print("DIST JUST TRAVELLED:", distance, "@DESIRED ANGLE", desiredAngle, "\n")
 		# Do this only everytime car moves one full distance - distance is between n number of spline points and so is out[0] gets done
@@ -789,14 +788,32 @@ def main(width, ROWS, mpQueue):
 
 	pygame.quit()
 
-def cameraProcess(n, mpQueue):
+def cameraProcess(n, ROWS, mpQueue):
+	experimentalZeroTurnTime = 12 # experimental
+	speed = 0.27 # 100% motor speed/duty cycle in meters/second
+	curAngle = 180 # default for the car pointing in the forward (left, -x) direction
+
 	net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.8)
 	camera = jetson.utils.gstCamera(1280, 720, "0")
 	cv2.destroyAllWindows()
 
-	truck = [5,13,28] # size, dx, dy 
-	car = [7,11,15]
+	truck = [0.4, 0.6, 1, 1.5, 5] 	# irlX, irlY, irlRadiusX, irlRadiusY, Size, use this 
+	car = [0.7, 1.2, 1, 1.5, 7]
+
+	
+	# Compressed version of finding timePerTile for new dimensions. # 
+	xEquivalent = abs((ROWS/2)*(truck[1]/truck[3]))# how many tiles would equate to the location of other cars/boundaries
+	metersPerTile = abs(truck[0]/xEquivalent)  # abs(irlX)/gridXEquivalent, irlX of last boundary because gridXEquivalent will be of the last boundary
+	timePerMeter = 1/speed
+	timePerTile = timePerMeter*metersPerTile
+	print("TIME PER TILE", timePerTile)
+
+
+	# truck = [5,13,28] # size, dx, dy 
+	# car = [7,11,15]
+
 	pedestrian = []
+	
 	seenDetections = { -1:[0,pedestrian], 8:[0,truck], 3:[0,car] } # person is ID 6
 
 	while True:
@@ -809,15 +826,40 @@ def cameraProcess(n, mpQueue):
 			for detection in detections:
 				id = detection.ClassID
 				if id in seenDetections.keys():
-					print("DETECTED A VEHICLE - RELEVANT")
 					if seenDetections[id][0] == 0:
-						detect = seenDetections[id][1]
-						detectionCollection.append((detect[0],detect[1],detect[2])) #tuple of diamater, x, y
+						print("Detected a relevated vehicle ")
+
+						obstacle = seenDetections[id][1]
+
+						realRatioX = obstacle[0]/obstacle[2] # irlX/irlRadiusX
+						realRatioY = obstacle[1]/obstacle[3] # irlY/irlRadiusY --> Approximate row length of the longest sides of the actual human sized car grid.
+
+						gridXEquivalent = abs((ROWS/2)*realRatioX) # how many tiles would equate to the location of other cars/boundaries
+						gridYEquivalent = abs((ROWS/2)*realRatioY)
+
+						midCoords = ROWS//2
+						print(midCoords)
+
+						if obstacle[0] < 0:
+							boundCol = midCoords - gridXEquivalent # columns would decrease
+						elif obstacle[0] > 0: # columns increase
+							boundCol = midCoords + gridXEquivalent
+						
+						if obstacle[1] < 0:
+							boundRow = midCoords + gridYEquivalent # rows would increase
+						elif obstacle[1] > 0: # rows decrease
+							boundRow = midCoords - gridYEquivalent
+						
+						detectionCollection = (obstacle[4], int(boundRow), int(boundCol), timePerTile)
+						mpQueue.put(detectionCollection) # need to put diameter, x, y.
+
 						seenDetections[id][0] = 1
 						print("ClassID:", id , "Left:", detection.Left, "Right:", detection.Right, "Width:", detection.Width, "Height:", detection.Height)
-						mpQueue.put(detectionCollection) # need to put diameter, x, y.
 					else:
-						print("Already tracking this detection.", id)					
+						pass
+						# print("Already tracking this detection.", id)		
+
+			
 
 		fps = net.GetNetworkFPS()
 
@@ -832,7 +874,7 @@ def cameraProcess(n, mpQueue):
 			break
 
 mpQueue = multiprocessing.Queue() # communicate between 2 processes
-camProc = multiprocessing.Process(target=cameraProcess, args=([], mpQueue))
+camProc = multiprocessing.Process(target=cameraProcess, args=([], NUMROWS, mpQueue))
 mainProc = multiprocessing.Process(target=main, args=(SCREENWIDTH, NUMROWS, mpQueue))
 mainProc.start()
 time.sleep(3)

@@ -75,12 +75,50 @@ def main():
 
     try:
         while True:
+        # GPIO.output(pins["IN1"],GPIO.HIGH)
+        # GPIO.output(pins["IN2"],GPIO.LOW)
+        # GPIO.output(pins["IN3"],GPIO.LOW)
+        # GPIO.output(pins["IN4"],GPIO.HIGH)
+        # time.sleep(1)
+        # stopCar()
+
+        # Lower duty cycle means more torque?
+        # APWM.ChangeDutyCycle(100)
+        # BPWM.ChangeDutyCycle(0)
+
+        # time.sleep(0.5) # Stop time after motion
+
+        # Differntial RTurn
             GPIO.output(pins["IN1"],GPIO.HIGH)
             GPIO.output(pins["IN2"],GPIO.LOW)
             GPIO.output(pins["IN3"],GPIO.LOW)
             GPIO.output(pins["IN4"],GPIO.HIGH)
-            time.sleep(6)
-            stop()
+            
+
+            # time.sleep(5)
+            print(time.clock())
+        # stopCar()
+        # time.sleep(0.5)
+        # GPIO.output(pins["IN1"],GPIO.LOW)
+        # GPIO.output(pins["IN2"],GPIO.LOW)
+        # GPIO.output(pins["IN3"],GPIO.HIGH)
+        # GPIO.output(pins["IN4"],GPIO.LOW)
+
+        # Right Turn
+        # GPIO.output(pins["IN1"],GPIO.LOW)
+        # GPIO.output(pins["IN2"],GPIO.HIGH)
+        # GPIO.output(pins["IN3"],GPIO.LOW)
+        # GPIO.output(pins["IN4"],GPIO.HIGH)
+
+        # Left turn        
+        # GPIO.output(pins["IN1"],GPIO.HIGH)
+        # GPIO.output(pins["IN2"],GPIO.LOW)
+        # GPIO.output(pins["IN3"],GPIO.HIGH)
+        # GPIO.output(pins["IN4"],GPIO.LOW)
+        
+        
+        # time.sleep(3) # how long to hold the turn
+        stopCar()
             # moveCar(60)
             # time.sleep(7)
             # break
@@ -97,3 +135,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+    # duty cyle
+    # torque 
+    # 
