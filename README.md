@@ -1,5 +1,6 @@
 # SmartCar
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+<img src='./AutonomousMiniCar.gif'>
 
 ### Navigating the Repo
 * All autonomous features: Path planning, realtime fast detection with CUDA wrappers and TensorRT, mapping visualization and transformations are found in SmartCar/autonomous 
