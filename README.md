@@ -27,7 +27,7 @@ Press enter to start planning path and watch the car move!
 Note: Multiprocessing handled for updating occupancy grid/path plan visualization and realtime video stream.
 ```
 
-### Prereqs For Telerobotics (Docker container coming soon)
+### Prereqs For Telerobotics (Part 1 of the Project) + Docker container coming soon
 * ROS
 * OpenCV
 * CMake
