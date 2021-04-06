@@ -1,4 +1,3 @@
-
 #include "rcProjPkg/controller.h"
 
 Controller::Controller(ros::NodeHandle node_handle) : node_handle(node_handle){

@@ -2,7 +2,7 @@
 #include "rcProjPkg/motorControls.h"
 
 #define left_mterminal_1 25 // in4 left motor red terminal (if high = fwd)
-#define left_mterminal_2 8 // in3 left motor black
+#define left_mterminal_2 8  // in3 left motor black
 #define right_mterminal_1 7 // in2 right motor red terminal (if high = fwd)
 #define right_mterminal_2 1 // in1 right motor black
 #define left_pwm 13 //black
@@ -39,14 +39,14 @@ void left(){
 void right(){
     digitalWrite(left_mterminal_1, HIGH);    //left side goes forwards
     digitalWrite(left_mterminal_2, LOW);
-    digitalWrite(right_mterminal_1, LOW);  //right side goes backwards
+    digitalWrite(right_mterminal_1, LOW);    //right side goes backwards
     digitalWrite(right_mterminal_2, HIGH);
 }
 
 void stop(){
     digitalWrite(left_mterminal_1, LOW);    //left side goes forwards
     digitalWrite(left_mterminal_2, LOW);
-    digitalWrite(right_mterminal_1, LOW);  //right side goes backwards
+    digitalWrite(right_mterminal_1, LOW);   //right side goes backwards
     digitalWrite(right_mterminal_2, LOW);
 }
 

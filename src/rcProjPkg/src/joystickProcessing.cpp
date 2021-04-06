@@ -1,4 +1,3 @@
-
 #include "rcProjPkg/joystickProcessing.h"
 
 SensorProcessing::SensorProcessing(ros::NodeHandle node_handle) : node_handle(node_handle){
@@ -21,13 +20,17 @@ void SensorProcessing::sensor_input_callback(rcProjPkg::data_msg data){
     double processedY = (data.y);
     std::cout << "Working with data: " << "X: " << processedX << " Y: " << processedY << std::endl;
 
-    // would use mapping for analog single joystick (not built in)
-    // -50 here to get a -50 --> 0 --> 50 axis in both x and y
-    // int mapX = map(processedX, 0, 2, 0, 100) - 50;
-    // int mapY = map(processedY, 0, 2, 0, 100) - 50;
 
-    // atan2: principal - quadrant value in degrees
-    // +360 %360 makes negative angle values between 0-180 (what atan2 outputs for quadrants 3&4 into 0-360 range)
+    /* 
+        would use mapping for analog single joystick (not built in)
+        -50 here to get a -50 --> 0 --> 50 axis in both x and y
+        int mapX = map(processedX, 0, 2, 0, 100) - 50;
+        int mapY = map(processedY, 0, 2, 0, 100) - 50;
+
+        atan2: principal - quadrant value in degrees
+        +360 %360 makes negative angle values between 0-180 (what atan2 outputs for quadrants 3&4 into 0-360 range)
+    */
+   
     int angle = fmod(((atan2(processedY,processedX) * 180 / M_PI)+360), 360);
     double magnitude = sqrt(pow(processedX,2) + pow(processedY,2));
     // IMPORTANT: NEEDS TO BE A FLOAT ANGLE AND MAGNITUDE OTHERWISE ROS MSG WILL GIVE ERROR md5sum mismatch

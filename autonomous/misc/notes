@@ -1,0 +1,91 @@
+"""
+NEED TO FIX THE BOUNDARIES GOING OUT OF RANGE!!!! FIXED
+
+Goal: movement() needs to align with spline path. (DONE)
+(int)spline[0][x] - spline[1][x] = how much movement() should occur, 
+same time: (int)spline[0][y] - spline[1][y] = how much movement() should occur, 
+
+only way you get a new xList or yList is if a new boundary is detected.
+
+How the car follow the path:
+first decide on direction of travel, then map the differential turn
+map a differential turn, to the angle between two consecutive points, p1 = x1,y1 and p2 = x2,y2 of the spline path list
+map the magnitude of the pytahgorean val of two consecutive spline points to the time the motors are moving at said differential
+
+
+each tile is 10cm. 
+emulates other stuff moving around but really ego car is just moving around
+assumption: no reving up controls - we maintain slow speed in autonomous mode so 1 tile @startup is the same as 1 tile from full speed
+in a real autonomous car, the updates come from the radar and lidar, which is how the pose of obstacles or cars is updated, here were updating their pose
+based on the ego cars movement closer to them.
+
+Using MNIST data to get sign
+can cover the cars with a blanket and then take it off quickly to test and show realtime mapping and trajectory planning
+Replacement for ranging and tracking techniques with sensors
+first detect the object, then get object dx dy w.r.t another object that is probably already on the map with a predetermined label
+written on a sign: 26  23  1  2 3
+dx dy referencing object 1, being object 2, size of object (changes mapped diameter)
+object 1 would already be on the map and now we have object 2 to be put on the roadmap as an obstacle
+
+
+
+### EXTRA STUFF: MOVING WINDOW ALGOS
+
+def shiftPosition(grid,row_new,col_new,midCoords):
+	grid[midCoords][midCoords].set_state(EGOPATH) # 19x19
+	grid[row_new][col_new].set_state(EGOPOSE) #18x19
+	# grid[row_new][col_new].make_start()
+	return grid
+
+def vertical(draw, win, grid, boolDirection, midCoords, rows, screenWidth, tileWidth): # Shfiting the grid vertically so it's always 41x41, left = 0, right = 1
+	if(boolDirection): # move right(up on screen): pop the bottom row, insert 0 row
+		grid = shiftPosition(grid, midCoords-1,midCoords,midCoords)
+		# for i in range(rows):
+		# 	grid[rows-1][i].set_state(OBSTACLESTATE)
+		# 	grid[0][i].set_state(OBSTACLESTATE)
+		nodeList = []
+		for i in range(rows):
+			for j in range(rows):
+				# add one to every y.
+		nodeList.append(Node(0, i, tileWidth, rows, OBSTACLESTATE))
+		grid.insert(0, nodeList)
+		print("Last Row Pre Pop:", grid[rows-1][0].get_color())
+		grid.pop(rows-1) # pop bottom row. // # pop last column
+		# print(grid[rows-1][0].get_color)
+		print("Last Row Post Pop:" ,grid[rows-1][0].get_color())
+		print("First Row Color:", grid[0][1].get_color())
+		print("Second Row Color:", grid[1][1].get_color())
+
+	else:
+		shiftPosition(grid, midCoords+1,midCoords,midCoords)  # rows increase downwards, basically setting one row down to be the new mid position
+		grid.pop(0)
+		grid.append([Node(i, rows-1, tileWidth, rows, OBSTACLESTATE) for i in range(NUMROWS)])
+	draw()
+	return grid
+
+def horizontal(win, grid, boolDirection, midCoords, rows, screenWidth, tileWidth): # Shfiting the grid horizontally so it's always 41x41, straight = 1, backward = 0
+	if(boolDirection):
+		shiftPosition(grid, midCoords, midCoords-1,midCoords) # this line should be first or the grid will be shifted
+		for index,row in enumerate(grid):
+			row.pop(NUMROWS-1)           # popping the last column value for each row, this is 41
+			row.insert(0, Node(0, index, tileWidth, rows, UNEXPLOREDSTATE)) # x location always 0, y location is index as it moves down the rows
+	else:
+		shiftPosition(grid, midCoords,midCoords+1,midCoords)
+		for index2,row in enumerate(grid):
+			row.pop(0) # pop the 1st columns for every row
+			row.append(Node(rows-1, index2, tileWidth, rows, UNEXPLOREDSTATE)) # numrows = numcols
+		draw(win,grid,rows,screenWidth)
+		return
+
+everytime the car goes any direction, the boundary center moves the opposite direection and re-expands size.
+this way the car stays in the middle, the map row/col is always the same and the boundaries just move into different row/cols setting state.
+
+new start point at newPose each iteration (then run A* each time new start position)
+end position moves just as barriers move, COULD JUST PERFORM A -1 OR +1 TRANSFORMATION ON THE ROW/COL OF THE WHOLE MAP/ALL NODES BUT FOR EFFICIENCY find boundary centres and end pos.
+move boundary centre down or any direction and then blow it up again for size.
+ boundaries are coming at you every movement, thus A* runs again
+need some catch if obstacles go out of bounds
+just set_state of a new node to obstacle if that's what needs to be done
+A* runs each time moved a tile or two tiles.	
+
+""" 
