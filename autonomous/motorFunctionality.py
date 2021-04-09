@@ -21,14 +21,6 @@ def map(x, in_min, in_max, out_min, out_max):
   return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
-def moveCar(pins):
-	print("Motors Forward")
-	GPIO.output(pins["IN1"],GPIO.LOW)
-	GPIO.output(pins["IN2"],GPIO.HIGH)
-	GPIO.output(pins["IN3"],GPIO.HIGH)
-	GPIO.output(pins["IN4"],GPIO.LOW)
-
-
 def getCarAngleTo(curAngle, desiredAngle, experimentalZeroTurnTime, pins):
 	angDiff = abs(curAngle - desiredAngle)
 	turnTime = map(angDiff, 0, 360, 0, experimentalZeroTurnTime)

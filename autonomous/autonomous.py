@@ -13,6 +13,8 @@ import time
 import multiprocessing
 from queue import PriorityQueue
 from occupancyNode import Node
+from motorFunctionality import moveCar, getCarAngleTo, stopCar
+from pathPlanningAlgo import algorithm
 
 """
 SmartCar Code
